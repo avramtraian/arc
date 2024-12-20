@@ -13,7 +13,7 @@ namespace arc {
 class Package {
 public:
     ByteBuffer byte_buffer;
-    usize byte_count;
+    usize byte_count { 0 };
 };
 
 }
