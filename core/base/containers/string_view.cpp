@@ -28,6 +28,14 @@ StringView StringView::from_utf8(const char* null_terminated_characters)
     return view;
 }
 
+StringView StringView::from_utf8(ReadonlyByteSpan utf8_encoded_bytes)
+{
+    StringView view;
+    view.m_characters = reinterpret_cast<const char*>(utf8_encoded_bytes.elements());
+    view.m_byte_count = utf8_encoded_bytes.byte_count();
+    return view;
+}
+
 bool StringView::operator==(const StringView& other) const
 {
     // If the two strings have different sizes we can be certain that

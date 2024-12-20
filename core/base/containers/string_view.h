@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <core/base/containers/span.h>
 #include <core/base/types.h>
 
 namespace arc {
@@ -13,6 +14,7 @@ class StringView {
 public:
     NODISCARD static StringView from_utf8(const char* characters, usize byte_count);
     NODISCARD static StringView from_utf8(const char* null_terminated_characters);
+    NODISCARD static StringView from_utf8(ReadonlyByteSpan utf8_encoded_bytes);
 
 public:
     ALWAYS_INLINE constexpr StringView()
