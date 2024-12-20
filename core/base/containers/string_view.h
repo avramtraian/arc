@@ -41,6 +41,9 @@ public:
     NODISCARD ALWAYS_INLINE bool is_empty() const { return m_byte_count == 0; }
     NODISCARD ALWAYS_INLINE bool has_characters() const { return m_byte_count > 0; }
 
+public:
+    void clear();
+
     NODISCARD bool operator==(const StringView& other) const;
     NODISCARD bool operator!=(const StringView& other) const;
 
