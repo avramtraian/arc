@@ -9,6 +9,8 @@ set(ARC_SOURCE_FILES
     base/assertions.cpp
     base/assertions.h
     base/containers/span.h
+    base/containers/string.cpp
+    base/containers/string.h
     base/containers/string_view.cpp
     base/containers/string_view.h
     base/containers/vector.h

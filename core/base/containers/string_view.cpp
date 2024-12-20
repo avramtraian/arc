@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: BSD-3-Clause.
  */
 
+#include <core/base/containers/string.h>
 #include <core/base/containers/string_view.h>
 
 namespace arc {
@@ -34,6 +35,18 @@ StringView StringView::from_utf8(ReadonlyByteSpan utf8_encoded_bytes)
     view.m_characters = reinterpret_cast<const char*>(utf8_encoded_bytes.elements());
     view.m_byte_count = utf8_encoded_bytes.byte_count();
     return view;
+}
+
+StringView::StringView(const String& string)
+    : m_characters(string.characters())
+    , m_byte_count(string.byte_count())
+{}
+
+StringView& StringView::operator=(const String& string)
+{
+    m_characters = string.characters();
+    m_byte_count = string.byte_count();
+    return *this;
 }
 
 void StringView::clear()

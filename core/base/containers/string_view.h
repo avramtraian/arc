@@ -10,6 +10,9 @@
 
 namespace arc {
 
+// Forward declaration.
+class String;
+
 class StringView {
 public:
     NODISCARD static StringView from_utf8(const char* characters, usize byte_count);
@@ -33,6 +36,9 @@ public:
         m_byte_count = other.m_byte_count;
         return *this;
     }
+
+    StringView(const String& string);
+    StringView& operator=(const String& string);
 
 public:
     NODISCARD ALWAYS_INLINE const char* characters() const { return m_characters; }
