@@ -8,6 +8,7 @@ set(ARC_SOURCE_FILES
     base/argument_parser.h
     base/assertions.cpp
     base/assertions.h
+    base/containers/span.h
     base/containers/string_view.cpp
     base/containers/string_view.h
     base/containers/vector.h
@@ -18,6 +19,7 @@ set(ARC_SOURCE_FILES
     base/memory/memory_operations.h
     base/numeric_limits.h
     base/types.h
+
     bytecode/forward.h
     bytecode/instruction.cpp
     bytecode/instruction.h
