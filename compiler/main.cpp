@@ -7,7 +7,7 @@
 
 namespace arc {
 
-static void compiler_main(const CommandLineArguments& arguments)
+static void compiler_main(const CommandLineArguments&)
 {}
 
 }

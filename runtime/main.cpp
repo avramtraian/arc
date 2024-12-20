@@ -20,7 +20,7 @@ void emit_instruction_in_package(Package& package, Args&&... args)
     package.byte_count += sizeof(InstructionType);
 }
 
-static void runtime_main(const CommandLineArguments& arguments)
+static void runtime_main(const CommandLineArguments&)
 {
     // [ 0] LoadImmediate8 r0, i10
     // [ 4] LoadImmediate8 r1, 0

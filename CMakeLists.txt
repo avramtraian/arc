@@ -6,6 +6,9 @@
 cmake_minimum_required(VERSION 3.20)
 project(arc LANGUAGES CXX C)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+
 # Set the output directory for all targets as the same directory where
 # the CMake build files are written to.
 set(OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/${CMAKE_BUILD_TYPE})
