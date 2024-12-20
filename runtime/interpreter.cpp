@@ -67,6 +67,11 @@ void Interpreter::execute()
                 dst.value = static_cast<u64>(instruction.immediate_value);
                 break;
             }
+
+            default: {
+                // An invalid instruction has been encountered!
+                ARC_ASSERT_NOT_REACHED;
+            }
         }
     }
 }
