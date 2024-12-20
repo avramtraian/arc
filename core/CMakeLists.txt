@@ -8,9 +8,13 @@ set(ARC_SOURCE_FILES
     base/argument_parser.h
     base/assertions.cpp
     base/assertions.h
+    base/containers/format.cpp
+    base/containers/format.h
     base/containers/span.h
     base/containers/string.cpp
     base/containers/string.h
+    base/containers/string_builder.cpp
+    base/containers/string_builder.h
     base/containers/string_view.cpp
     base/containers/string_view.h
     base/containers/vector.h
