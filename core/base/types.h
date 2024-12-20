@@ -24,6 +24,9 @@ using s16 = signed short;
 using s32 = signed int;
 using s64 = signed long long;
 
+using f32 = float;
+using f64 = double;
+
 using usize = unsigned long long;
 using ssize = signed long long;
 using uintptr = unsigned long long;
@@ -67,6 +70,10 @@ template<>           struct IsSignedInteger<s16>  { static constexpr bool value 
 template<>           struct IsSignedInteger<s32>  { static constexpr bool value = true; };
 template<>           struct IsSignedInteger<s64>  { static constexpr bool value = true; };
 
+template<typename T> struct IsFloatingPoint         { static constexpr bool value = false; };
+template<>           struct IsFloatingPoint<f32>    { static constexpr bool value = true; };
+template<>           struct IsFloatingPoint<f64>    { static constexpr bool value = true; };
+
 template<typename TypeIfTrue, typename TypeIfFalse, bool condition> struct ConditionalType {};
 template<typename TypeIfTrue, typename TypeIfFalse>                 struct ConditionalType<TypeIfTrue, TypeIfFalse, true>   { using Type = TypeIfTrue; };
 template<typename TypeIfTrue, typename TypeIfFalse>                 struct ConditionalType<TypeIfTrue, TypeIfFalse, false>  { using Type = TypeIfFalse; };
@@ -94,6 +101,9 @@ template<typename T>
 constexpr bool is_signed_integer = impl::IsSignedInteger<T>::value;
 template<typename T>
 constexpr bool is_integer = is_unsigned_integer<T> || is_signed_integer<T>;
+
+template<typename T>
+constexpr bool is_floating_point = impl::IsFloatingPoint<T>::value;
 
 template<typename TypeIfTrue, typename TypeIfFalse, bool condition>
 using ConditionalType = typename impl::ConditionalType<TypeIfTrue, TypeIfFalse, condition>::Type;
