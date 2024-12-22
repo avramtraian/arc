@@ -11,6 +11,10 @@
 
 namespace arc {
 
+StringBuilder::StringBuilder()
+    : m_byte_count(0)
+{}
+
 String StringBuilder::release_string()
 {
     const StringView builder_view = StringView::from_utf8(ReadonlyByteSpan(m_characters_buffer.bytes(), m_byte_count));

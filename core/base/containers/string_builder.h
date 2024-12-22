@@ -25,7 +25,7 @@ public:
     }
 
 public:
-    StringBuilder() = default;
+    StringBuilder();
     ~StringBuilder() = default;
 
     NODISCARD String release_string();
