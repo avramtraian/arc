@@ -33,6 +33,12 @@ public:
 public:
     void append(StringView string_view);
 
+    template<typename... Args>
+    void append(StringView format, Args&&... parameters)
+    {
+        formatted_implementation(format, forward<Args>(parameters)...);
+    }
+
     template<typename T>
     ALWAYS_INLINE void append_formatted(const T& value)
     {
