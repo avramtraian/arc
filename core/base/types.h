@@ -11,6 +11,7 @@
 #include <cstdarg>
 #include <initializer_list>
 #include <new>
+#include <type_traits>
 
 namespace arc {
 
@@ -106,6 +107,9 @@ constexpr bool is_integer = is_unsigned_integer<T> || is_signed_integer<T>;
 
 template<typename T>
 constexpr bool is_floating_point = impl::IsFloatingPoint<T>::value;
+
+template<typename DerivedType, typename BaseType>
+constexpr bool is_derived_from = std::is_base_of_v<BaseType, DerivedType>;
 
 template<typename TypeIfTrue, typename TypeIfFalse, bool condition>
 using ConditionalType = typename impl::ConditionalType<TypeIfTrue, TypeIfFalse, condition>::Type;
