@@ -10,6 +10,7 @@ set(ARC_SOURCE_FILES
     base/assertions.h
     base/containers/format.cpp
     base/containers/format.h
+    base/containers/ref_ptr.h
     base/containers/span.h
     base/containers/string.cpp
     base/containers/string.h
