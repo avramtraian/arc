@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <core/base/containers/span.h>
 #include <core/base/types.h>
 
 namespace arc {
@@ -29,6 +30,21 @@ public:
 
     NODISCARD ALWAYS_INLINE usize byte_count() const { return m_byte_count; }
     NODISCARD ALWAYS_INLINE bool is_empty() const { return m_byte_count == 0; }
+
+    NODISCARD ALWAYS_INLINE ReadWriteByteSpan byte_span() { return ReadWriteByteSpan(m_bytes, m_byte_count); }
+    NODISCARD ALWAYS_INLINE ReadonlyByteSpan byte_span() const { return ReadonlyByteSpan(m_bytes, m_byte_count); }
+
+    NODISCARD ALWAYS_INLINE ReadWriteByteSpan read_write_byte_span()
+    {
+        return ReadWriteByteSpan(m_bytes, m_byte_count);
+    }
+
+    NODISCARD ALWAYS_INLINE WriteonlyByteSpan writeonly_byte_span() { return WriteonlyByteSpan(m_bytes, m_byte_count); }
+
+    NODISCARD ALWAYS_INLINE ReadonlyByteSpan readonly_byte_span() const
+    {
+        return ReadonlyByteSpan(m_bytes, m_byte_count);
+    }
 
 public:
     void free();
