@@ -39,6 +39,8 @@ using ReadonlyBytes = ReadonlyByte*;
 using WriteonlyBytes = WriteonlyByte*;
 using ReadWriteBytes = ReadWriteByte*;
 
+using NullptrType = decltype(nullptr);
+
 namespace impl {
 // clang-format off
 template<typename T> struct RemoveReference         { using Type = T; };
