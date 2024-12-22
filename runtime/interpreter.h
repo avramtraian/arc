@@ -37,6 +37,16 @@ private:
     }
 
 private:
+    void execute_add_instruction(const AddInstruction& instruction);
+    void execute_break_instruction(const BreakInstruction& instruction);
+    void execute_compare_greater_instruction(const CompareGreaterInstruction& instruction);
+    void execute_increment_instruction(const IncrementInstruction& instruction);
+    void execute_jump_absolute_instruction(const JumpAbsoluteInstruction& instruction);
+    void execute_jump_absolute_if_instruction(const JumpAbsoluteIfInstruction& instruction);
+    void execute_load_immediate_8_instruction(const LoadImmediate8Instruction& instruction);
+    void execute_unknown_instruction(const UnknownInstruction& instruction);
+
+private:
     const Package& m_package;
     u64 m_instruction_byte_offset;
 
