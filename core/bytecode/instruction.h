@@ -14,23 +14,23 @@ namespace arc {
 
 // clang-format off
 #define ARC_ENUMERATE_INSTRUCTION_CODES(x) \
-    x(Unknown)                             \
-    x(Add)                                 \
-    x(CompareGreater)                      \
-    x(Increment)                           \
-    x(JumpAbsolute)                        \
-    x(JumpAbsoluteIf)                      \
-    x(LoadImmediate8)                      \
-    x(Break)
+    x(Unknown, unknown)                    \
+    x(Add, add)                            \
+    x(CompareGreater, compare_greater)     \
+    x(Increment, increment)                \
+    x(JumpAbsolute, jump_absolute)         \
+    x(JumpAbsoluteIf, jump_absolute_if)    \
+    x(LoadImmediate8, load_immediate_8)    \
+    x(Break, break)
 // clang-format on
 
 enum class InstructionCode : u16 {
-#define ARC_ENUM_DECLARATION(x) x,
+#define ARC_ENUM_DECLARATION(x, unused) x,
     ARC_ENUMERATE_INSTRUCTION_CODES(ARC_ENUM_DECLARATION)
 #undef ARC_ENUM_DECLARATION
 };
 
-const char* instruction_code_to_string(InstructionCode instruction_code);
+StringView instruction_code_to_string(InstructionCode instruction_code);
 InstructionCode instruction_code_from_string(StringView instruction_string);
 
 struct AddInstruction {
