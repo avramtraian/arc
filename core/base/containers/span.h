@@ -13,19 +13,92 @@ namespace arc {
 template<typename T>
 class Span {
 public:
+    template<typename Q>
+    friend class Span;
+
     using Iterator = T*;
     using ConstIterator = const T*;
 
 public:
-    ALWAYS_INLINE constexpr Span()
+    ALWAYS_INLINE Span()
         : m_elements(nullptr)
         , m_count(0)
     {}
 
-    ALWAYS_INLINE constexpr Span(T* in_elements, usize in_count)
+    ALWAYS_INLINE Span(const Span& other)
+        : m_elements(other.m_elements)
+        , m_count(other.m_count)
+    {}
+
+    ALWAYS_INLINE Span(const Span<RemoveConst<T>>& other)
+    requires (is_const<T>)
+        : m_elements(other.m_elements)
+        , m_count(other.m_count)
+    {}
+
+    ALWAYS_INLINE Span(Span&& other) noexcept
+        : m_elements(other.m_elements)
+        , m_count(other.m_count)
+    {
+        other.m_elements = nullptr;
+        other.m_count = 0;
+    }
+
+    ALWAYS_INLINE Span(Span<RemoveConst<T>>&& other) noexcept
+    requires (is_const<T>)
+        : m_elements(other.m_elements)
+        , m_count(other.m_count)
+    {
+        other.m_elements = nullptr;
+        other.m_count = 0;
+    }
+
+    ALWAYS_INLINE Span(T* in_elements, usize in_count)
         : m_elements(in_elements)
         , m_count(in_count)
     {}
+
+    ALWAYS_INLINE Span& operator=(const Span& other)
+    {
+        m_elements = other.m_elements;
+        m_count = other.m_count;
+        return *this;
+    }
+
+    ALWAYS_INLINE Span& operator=(const Span<RemoveConst<T>>& other)
+    requires (is_const<T>)
+    {
+        m_elements = other.m_elements;
+        m_count = other.m_count;
+        return *this;
+    }
+
+    ALWAYS_INLINE Span& operator=(Span&& other) noexcept
+    {
+        // Handle self-assignment case.
+        if (this == &other)
+            return *this;
+
+        m_elements = other.m_elements;
+        m_count = other.m_count;
+        other.m_elements = nullptr;
+        other.m_count = 0;
+        return *this;
+    }
+
+    ALWAYS_INLINE Span& operator=(Span<RemoveConst<T>>&& other) noexcept
+    requires (is_const<T>)
+    {
+        // Handle self-assignment case.
+        if (this == &other)
+            return *this;
+
+        m_elements = other.m_elements;
+        m_count = other.m_count;
+        other.m_elements = nullptr;
+        other.m_count = 0;
+        return *this;
+    }
 
 public:
     NODISCARD ALWAYS_INLINE T* elements() { return m_elements; }
@@ -76,6 +149,27 @@ public:
     {
         ARC_ASSERT(has_elements());
         return m_elements[m_count - 1];
+    }
+
+public:
+    NODISCARD ALWAYS_INLINE Span slice(usize offset, usize in_count) const
+    {
+        ARC_ASSERT(offset + in_count <= m_count);
+
+        Span sliced_span;
+        sliced_span.m_elements = m_elements + offset;
+        sliced_span.m_count = in_count;
+        return sliced_span;
+    }
+
+    NODISCARD ALWAYS_INLINE Span slice(usize offset) const
+    {
+        ARC_ASSERT(offset <= m_count);
+
+        Span sliced_span;
+        sliced_span.m_elements = m_elements + offset;
+        sliced_span.m_count = m_count - offset;
+        return sliced_span;
     }
 
 public:
