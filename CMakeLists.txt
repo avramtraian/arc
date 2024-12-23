@@ -16,6 +16,50 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 set(CMAKE_PDB_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 
-add_subdirectory(compiler)
-add_subdirectory(core)
-add_subdirectory(runtime)
+set(ARC_SOURCE_FILES
+    bytecode/instruction.cpp
+    bytecode/instruction.h
+    bytecode/forward.h
+    bytecode/package.cpp
+    bytecode/package.h
+    bytecode/register.h
+
+    cmd/argument_parser.cpp
+    cmd/argument_parser.h
+    cmd/cmd_entry_point.cpp
+
+    core/assertions.cpp
+    core/assertions.h
+    core/containers/array.h
+    core/containers/format.cpp
+    core/containers/format.h
+    core/containers/optional.h
+    core/containers/own_ptr.h
+    core/containers/ref_ptr.h
+    core/containers/span.h
+    core/containers/string.cpp
+    core/containers/string.h
+    core/containers/string_builder.cpp
+    core/containers/string_builder.h
+    core/containers/string_view.cpp
+    core/containers/string_view.h
+    core/containers/vector.h
+    core/defines.h
+    core/forward.h
+    core/memory/byte_buffer.cpp
+    core/memory/byte_buffer.h
+    core/memory/memory_operations.cpp
+    core/memory/memory_operations.h
+    core/numeric_limits.h
+    core/types.h
+
+    runtime/forward.h
+    runtime/instruction_execute.cpp
+    runtime/interpreter.cpp
+    runtime/interpreter.h
+    runtime/virtual_machine.cpp
+    runtime/virtual_machine.h
+)
+
+add_executable(arc ${ARC_SOURCE_FILES})
+target_include_directories(arc PUBLIC ${CMAKE_SOURCE_DIR})

@@ -5,52 +5,27 @@
 
 #pragma once
 
-#include <core/bytecode/package.h>
+#include <bytecode/forward.h>
+#include <runtime/virtual_machine.h>
 
-namespace arc {
+namespace arc::runtime {
 
 class Interpreter {
-public:
-    struct RegisterStorage {
-        u64 value;
-    };
+    ARC_MAKE_NONCOPYABLE(Interpreter);
+    ARC_MAKE_NONMOVABLE(Interpreter);
 
 public:
-    explicit Interpreter(const Package& package);
+    Interpreter(VirtualMachine&, const bytecode::Package&);
 
     void execute();
 
-    NODISCARD RegisterStorage& register_storage(Register in_register);
-    NODISCARD const RegisterStorage& register_storage(Register in_register) const;
+    NODISCARD ALWAYS_INLINE VirtualMachine& vm() { return m_virtual_machine; }
+    NODISCARD ALWAYS_INLINE const VirtualMachine& vm() const { return m_virtual_machine; }
 
 private:
-    template<typename InstructionType>
-    NODISCARD ALWAYS_INLINE const InstructionType& decode_instruction()
-    {
-        // TODO(Traian): Actually validate that the instruction stream contains the required instruction
-        //               type. Decoding the wrong instruction type will cause bugs very hard to track down.
-
-        const ReadonlyBytes encoded_instruction = m_package.byte_buffer.bytes() + m_instruction_byte_offset;
-        const InstructionType& instruction = *reinterpret_cast<const InstructionType*>(encoded_instruction);
-        m_instruction_byte_offset += sizeof(InstructionType);
-        return instruction;
-    }
-
-private:
-    void execute_add_instruction(const AddInstruction& instruction);
-    void execute_break_instruction(const BreakInstruction& instruction);
-    void execute_compare_greater_instruction(const CompareGreaterInstruction& instruction);
-    void execute_increment_instruction(const IncrementInstruction& instruction);
-    void execute_jump_absolute_instruction(const JumpAbsoluteInstruction& instruction);
-    void execute_jump_absolute_if_instruction(const JumpAbsoluteIfInstruction& instruction);
-    void execute_load_immediate_8_instruction(const LoadImmediate8Instruction& instruction);
-    void execute_unknown_instruction(const UnknownInstruction& instruction);
-
-private:
-    const Package& m_package;
-    u64 m_instruction_byte_offset;
-
-    Vector<RegisterStorage> m_registers;
+    VirtualMachine& m_virtual_machine;
+    const bytecode::Package& m_package;
+    usize m_instruction_pointer;
 };
 
 }
