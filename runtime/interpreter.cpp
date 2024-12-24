@@ -24,11 +24,24 @@ void Interpreter::execute()
     }
 }
 
+void Interpreter::jump(bytecode::JumpAddress jump_address)
+{
+    // NOTE: The interpreter is already scheduled to jump. No instruction should be able
+    //       to schedule two (or more) jumps so this must be a programming error.
+    ARC_ASSERT(!m_jump_address.has_value());
+    m_jump_address = jump_address;
+}
+
 void Interpreter::fetch_and_execute()
 {
     const bytecode::Instruction& instruction = m_package.fetch_instruction(m_instruction_pointer);
     ++m_instruction_pointer;
     instruction.execute(*this);
+
+    if (m_jump_address.has_value()) {
+        m_instruction_pointer = m_jump_address.value().address();
+        m_jump_address.clear();
+    }
 }
 
 }

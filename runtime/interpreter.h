@@ -6,6 +6,8 @@
 #pragma once
 
 #include <bytecode/forward.h>
+#include <bytecode/jump_address.h>
+#include <core/containers/optional.h>
 #include <runtime/virtual_machine.h>
 
 namespace arc::runtime {
@@ -22,6 +24,8 @@ public:
     NODISCARD ALWAYS_INLINE VirtualMachine& vm() { return m_virtual_machine; }
     NODISCARD ALWAYS_INLINE const VirtualMachine& vm() const { return m_virtual_machine; }
 
+    void jump(bytecode::JumpAddress jump_address);
+
 private:
     void fetch_and_execute();
 
@@ -29,6 +33,7 @@ private:
     VirtualMachine& m_virtual_machine;
     const bytecode::Package& m_package;
     usize m_instruction_pointer;
+    Optional<bytecode::JumpAddress> m_jump_address;
 };
 
 }
