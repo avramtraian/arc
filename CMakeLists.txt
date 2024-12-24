@@ -22,6 +22,7 @@ set(ARC_SOURCE_FILES
     bytecode/instruction.cpp
     bytecode/instruction.h
     bytecode/forward.h
+    bytecode/jump_address.h
     bytecode/package.cpp
     bytecode/package.h
     bytecode/register.h
