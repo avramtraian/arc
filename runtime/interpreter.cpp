@@ -20,10 +20,15 @@ void Interpreter::execute()
     m_instruction_pointer = 0;
 
     while (m_package.instruction_pointer_is_valid(m_instruction_pointer)) {
-        const bytecode::Instruction& instruction = m_package.fetch_instruction(m_instruction_pointer);
-        ++m_instruction_pointer;
-        instruction.execute(*this);
+        fetch_and_execute();
     }
+}
+
+void Interpreter::fetch_and_execute()
+{
+    const bytecode::Instruction& instruction = m_package.fetch_instruction(m_instruction_pointer);
+    ++m_instruction_pointer;
+    instruction.execute(*this);
 }
 
 }

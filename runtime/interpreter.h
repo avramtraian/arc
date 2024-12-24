@@ -23,6 +23,9 @@ public:
     NODISCARD ALWAYS_INLINE const VirtualMachine& vm() const { return m_virtual_machine; }
 
 private:
+    void fetch_and_execute();
+
+private:
     VirtualMachine& m_virtual_machine;
     const bytecode::Package& m_package;
     usize m_instruction_pointer;
