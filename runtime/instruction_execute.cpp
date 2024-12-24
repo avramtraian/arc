@@ -19,6 +19,14 @@ void AddInstruction::execute(Interpreter& interpreter) const
     dst.value = lhs.value + rhs.value;
 }
 
+void CompareGreaterInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    auto& dst = interpreter.vm().register_storage(m_dst_register);
+    const auto& lhs = interpreter.vm().register_storage(m_lhs_register);
+    const auto& rhs = interpreter.vm().register_storage(m_rhs_register);
+    dst.value = lhs.value > rhs.value;
+}
+
 void LoadImmediate8Instruction::execute(Interpreter& interpreter) const
 {
     auto& dst = interpreter.vm().register_storage(m_dst_register);

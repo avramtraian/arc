@@ -42,6 +42,25 @@ private:
     Register m_rhs_register;
 };
 
+class CompareGreaterInstruction : public Instruction {
+public:
+    ALWAYS_INLINE CompareGreaterInstruction(Register dst_register, Register lhs_register, Register rhs_register)
+        : m_dst_register(dst_register)
+        , m_lhs_register(lhs_register)
+        , m_rhs_register(rhs_register)
+    {}
+
+    virtual ~CompareGreaterInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    Register m_dst_register;
+    Register m_lhs_register;
+    Register m_rhs_register;
+};
+
 class LoadImmediate8Instruction : public Instruction {
 public:
     ALWAYS_INLINE LoadImmediate8Instruction(Register dst_register, u8 immediate_value)

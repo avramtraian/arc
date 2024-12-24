@@ -13,6 +13,11 @@ String AddInstruction::to_string() const
     return StringBuilder::formatted("AddInstruction dst:{}, lhs:{}, rhs:{}"sv, m_dst_register, m_lhs_register, m_rhs_register);
 }
 
+String CompareGreaterInstruction::to_string() const
+{
+    return StringBuilder::formatted("CompareGreater dst:{}, lhs:{}, rhs:{}"sv, m_dst_register, m_lhs_register, m_rhs_register);
+}
+
 String LoadImmediate8Instruction::to_string() const
 {
     return StringBuilder::formatted("LoadImmediate8 dst:{}, value:{}"sv, m_dst_register, m_immediate_value);
