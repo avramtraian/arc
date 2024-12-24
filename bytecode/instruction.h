@@ -61,6 +61,21 @@ private:
     Register m_rhs_register;
 };
 
+class IncrementInstruction : public Instruction {
+public:
+    ALWAYS_INLINE explicit IncrementInstruction(Register dst_register)
+        : m_dst_register(dst_register)
+    {}
+
+    virtual ~IncrementInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    Register m_dst_register;
+};
+
 class LoadImmediate8Instruction : public Instruction {
 public:
     ALWAYS_INLINE LoadImmediate8Instruction(Register dst_register, u8 immediate_value)
