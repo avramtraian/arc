@@ -17,6 +17,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 set(CMAKE_PDB_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY})
 
 set(ARC_SOURCE_FILES
+    bytecode/disassembler.cpp
+    bytecode/disassembler.h
     bytecode/instruction.cpp
     bytecode/instruction.h
     bytecode/forward.h

@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: BSD-3-Clause.
  */
 
+#include <bytecode/disassembler.h>
 #include <bytecode/instruction.h>
 #include <bytecode/package.h>
 #include <cmd/argument_parser.h>
@@ -22,6 +23,9 @@ void entry_point(const CommandLineArguments&)
     package.emit_instruction<LoadImmediate8Instruction>(Register::GPR0, 5);
     package.emit_instruction<LoadImmediate8Instruction>(Register::GPR1, 10);
     package.emit_instruction<AddInstruction>(Register::GPR2, Register::GPR0, Register::GPR1);
+
+    const Disassembler disassembler(package);
+    printf("%s", disassembler.instructions_as_string().characters());
 
     VirtualMachine virtual_machine;
     Interpreter interpreter(virtual_machine, package);
