@@ -23,6 +23,16 @@ String IncrementInstruction::to_string() const
     return StringBuilder::formatted("Increment dst:{}"sv, m_dst_register);
 }
 
+String JumpInstruction::to_string() const
+{
+    return StringBuilder::formatted("Jump address:{}"sv, m_jump_address);
+}
+
+String JumpIfInstruction::to_string() const
+{
+    return StringBuilder::formatted("JumpIf condition:{}, address:{}"sv, m_condition_register, m_jump_address);
+}
+
 String LoadImmediate8Instruction::to_string() const
 {
     return StringBuilder::formatted("LoadImmediate8 dst:{}, value:{}"sv, m_dst_register, m_immediate_value);

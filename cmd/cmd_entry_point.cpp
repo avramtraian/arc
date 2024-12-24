@@ -20,9 +20,14 @@ void entry_point(const CommandLineArguments&)
     using namespace runtime;
 
     bytecode::Package package;
-    package.emit_instruction<LoadImmediate8Instruction>(Register::GPR0, 5);
-    package.emit_instruction<LoadImmediate8Instruction>(Register::GPR1, 10);
-    package.emit_instruction<AddInstruction>(Register::GPR2, Register::GPR0, Register::GPR1);
+    package.emit_instruction<LoadImmediate8Instruction>(Register::GPR0, 0);
+    package.emit_instruction<LoadImmediate8Instruction>(Register::GPR1, 1);
+    package.emit_instruction<LoadImmediate8Instruction>(Register::GPR2, 10);
+    package.emit_instruction<CompareGreaterInstruction>(Register::GPR3, Register::GPR1, Register::GPR2);
+    package.emit_instruction<JumpIfInstruction>(Register::GPR3, JumpAddress(8));
+    package.emit_instruction<AddInstruction>(Register::GPR0, Register::GPR0, Register::GPR1);
+    package.emit_instruction<IncrementInstruction>(Register::GPR1);
+    package.emit_instruction<JumpInstruction>(JumpAddress(3));
 
     const Disassembler disassembler(package);
     printf("%s", disassembler.instructions_as_string().characters());
@@ -31,7 +36,7 @@ void entry_point(const CommandLineArguments&)
     Interpreter interpreter(virtual_machine, package);
     interpreter.execute();
 
-    auto dst_register = virtual_machine.register_storage(Register::GPR2);
+    auto dst_register = virtual_machine.register_storage(Register::GPR0);
     printf("%s", StringBuilder::formatted("{}"sv, dst_register).characters());
 }
 

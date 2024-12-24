@@ -33,6 +33,18 @@ void IncrementInstruction::execute(runtime::Interpreter& interpreter) const
     ++dst.value;
 }
 
+void JumpInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    interpreter.jump(m_jump_address);
+}
+
+void JumpIfInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    const auto& condition = interpreter.vm().register_storage(m_condition_register);
+    if (condition.value)
+        interpreter.jump(m_jump_address);
+}
+
 void LoadImmediate8Instruction::execute(Interpreter& interpreter) const
 {
     auto& dst = interpreter.vm().register_storage(m_dst_register);

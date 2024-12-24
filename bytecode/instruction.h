@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <bytecode/jump_address.h>
 #include <bytecode/register.h>
 #include <core/containers/string.h>
 #include <runtime/forward.h>
@@ -74,6 +75,38 @@ public:
 
 private:
     Register m_dst_register;
+};
+
+class JumpInstruction : public Instruction {
+public:
+    ALWAYS_INLINE explicit JumpInstruction(JumpAddress jump_address)
+        : m_jump_address(jump_address)
+    {}
+
+    virtual ~JumpInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    JumpAddress m_jump_address;
+};
+
+class JumpIfInstruction : public Instruction {
+public:
+    ALWAYS_INLINE JumpIfInstruction(Register condition_register, JumpAddress jump_address)
+        : m_condition_register(condition_register)
+        , m_jump_address(jump_address)
+    {}
+
+    virtual ~JumpIfInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    Register m_condition_register;
+    JumpAddress m_jump_address;
 };
 
 class LoadImmediate8Instruction : public Instruction {
