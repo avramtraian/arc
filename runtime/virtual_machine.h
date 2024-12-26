@@ -31,8 +31,10 @@ public:
     NODISCARD const RegisterStorage& stack_as_register_storage(usize stack_byte_offset) const;
     NODISCARD usize stack_byte_count() const;
 
-    RegisterStorage& stack_push_register();
+    WriteonlyBytes stack_push(usize push_byte_count);
     void stack_pop(usize pop_byte_count);
+
+    RegisterStorage& stack_push_register();
 
 private:
     Array<RegisterStorage, static_cast<u8>(bytecode::Register::Count)> m_registers;

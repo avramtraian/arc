@@ -45,12 +45,12 @@ usize VirtualMachine::stack_byte_count() const
     return m_stack_byte_count;
 }
 
-VirtualMachine::RegisterStorage& VirtualMachine::stack_push_register()
+WriteonlyBytes VirtualMachine::stack_push(usize push_byte_count)
 {
-    m_stack_buffer.set_count(m_stack_byte_count + sizeof(RegisterStorage), 0);
-    auto& register_storage = *reinterpret_cast<RegisterStorage*>(m_stack_buffer.elements() + m_stack_byte_count);
-    m_stack_byte_count += sizeof(RegisterStorage);
-    return register_storage;
+    m_stack_buffer.set_count(m_stack_byte_count + push_byte_count, 0);
+    const WriteonlyBytes bytes = m_stack_buffer.elements() + m_stack_byte_count;
+    m_stack_byte_count += push_byte_count;
+    return bytes;
 }
 
 void VirtualMachine::stack_pop(usize pop_byte_count)
@@ -59,6 +59,12 @@ void VirtualMachine::stack_pop(usize pop_byte_count)
     ARC_ASSERT(pop_byte_count <= m_stack_byte_count);
     m_stack_byte_count -= pop_byte_count;
     zero_memory(m_stack_buffer.elements() + m_stack_byte_count, pop_byte_count);
+}
+
+VirtualMachine::RegisterStorage& VirtualMachine::stack_push_register()
+{
+    const WriteonlyBytes bytes = stack_push(sizeof(RegisterStorage));
+    return *reinterpret_cast<RegisterStorage*>(bytes);
 }
 
 }

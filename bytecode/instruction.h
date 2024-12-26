@@ -152,6 +152,51 @@ public:
     virtual String to_string() const override;
 };
 
+class PushImmediate8Instruction : public Instruction {
+public:
+    ALWAYS_INLINE explicit PushImmediate8Instruction(u64 immediate_value)
+        : m_immediate_value(immediate_value)
+    {}
+
+    virtual ~PushImmediate8Instruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    u8 m_immediate_value;
+};
+
+class PushImmediate16Instruction : public Instruction {
+public:
+    ALWAYS_INLINE explicit PushImmediate16Instruction(u64 immediate_value)
+        : m_immediate_value(immediate_value)
+    {}
+
+    virtual ~PushImmediate16Instruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    u16 m_immediate_value;
+};
+
+class PushImmediate32Instruction : public Instruction {
+public:
+    ALWAYS_INLINE explicit PushImmediate32Instruction(u64 immediate_value)
+        : m_immediate_value(immediate_value)
+    {}
+
+    virtual ~PushImmediate32Instruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    u32 m_immediate_value;
+};
+
 class PushImmediate64Instruction : public Instruction {
 public:
     ALWAYS_INLINE explicit PushImmediate64Instruction(u64 immediate_value)

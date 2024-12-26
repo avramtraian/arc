@@ -66,11 +66,32 @@ void PopRegisterInstruction::execute(Interpreter& interpreter) const
     vm.stack_pop(sizeof(VirtualMachine::RegisterStorage));
 }
 
+void PushImmediate8Instruction::execute(runtime::Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    const WriteonlyBytes bytes = vm.stack_push(sizeof(u8));
+    *reinterpret_cast<u8*>(bytes) = m_immediate_value;
+}
+
+void PushImmediate16Instruction::execute(runtime::Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    const WriteonlyBytes bytes = vm.stack_push(sizeof(u16));
+    *reinterpret_cast<u16*>(bytes) = m_immediate_value;
+}
+
+void PushImmediate32Instruction::execute(runtime::Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    const WriteonlyBytes bytes = vm.stack_push(sizeof(u32));
+    *reinterpret_cast<u32*>(bytes) = m_immediate_value;
+}
+
 void PushImmediate64Instruction::execute(runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
-    auto& dst_register = vm.stack_push_register();
-    dst_register.value = m_immediate_value;
+    const WriteonlyBytes bytes = vm.stack_push(sizeof(u64));
+    *reinterpret_cast<u64*>(bytes) = m_immediate_value;
 }
 
 void PushRegisterInstruction::execute(Interpreter& interpreter) const

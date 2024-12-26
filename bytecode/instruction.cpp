@@ -48,6 +48,21 @@ String PopRegisterInstruction::to_string() const
     return StringBuilder::formatted("PopRegister"sv);
 }
 
+String PushImmediate8Instruction::to_string() const
+{
+    return StringBuilder::formatted("PushImmediate8 value:{}"sv, m_immediate_value);
+}
+
+String PushImmediate16Instruction::to_string() const
+{
+    return StringBuilder::formatted("PushImmediate16value:{}"sv, m_immediate_value);
+}
+
+String PushImmediate32Instruction::to_string() const
+{
+    return StringBuilder::formatted("PushImmediate32 value:{}"sv, m_immediate_value);
+}
+
 String PushImmediate64Instruction::to_string() const
 {
     return StringBuilder::formatted("PushImmediate64 value:{}"sv, m_immediate_value);
