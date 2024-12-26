@@ -110,4 +110,28 @@ void StoreToStackInstruction::execute(Interpreter& interpreter) const
     dst_register.value = src_register.value;
 }
 
+void Store8ToStackInstruction::execute(Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    const ReadWriteBytes bytes = vm.stack_as_bytes(m_dst_stack_offset, sizeof(u8));
+    const auto& src_register = vm.register_storage(m_src_register);
+    *reinterpret_cast<u8*>(bytes) = static_cast<u8>(src_register.value);
+}
+
+void Store16ToStackInstruction::execute(Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    const ReadWriteBytes bytes = vm.stack_as_bytes(m_dst_stack_offset, sizeof(u16));
+    const auto& src_register = vm.register_storage(m_src_register);
+    *reinterpret_cast<u16*>(bytes) = static_cast<u16>(src_register.value);
+}
+
+void Store32ToStackInstruction::execute(Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    const ReadWriteBytes bytes = vm.stack_as_bytes(m_dst_stack_offset, sizeof(u32));
+    const auto& src_register = vm.register_storage(m_src_register);
+    *reinterpret_cast<u32*>(bytes) = static_cast<u32>(src_register.value);
+}
+
 }

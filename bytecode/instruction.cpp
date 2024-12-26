@@ -78,4 +78,19 @@ String StoreToStackInstruction::to_string() const
     return StringBuilder::formatted("StoreToStack dst:{}, src:{}"sv, m_dst_stack_offset, m_src_register);
 }
 
+String Store8ToStackInstruction::to_string() const
+{
+    return StringBuilder::formatted("Store8ToStack dst:{}, src:{}"sv, m_dst_stack_offset, m_src_register);
+}
+
+String Store16ToStackInstruction::to_string() const
+{
+    return StringBuilder::formatted("Store16ToStack dst:{}, src:{}"sv, m_dst_stack_offset, m_src_register);
+}
+
+String Store32ToStackInstruction::to_string() const
+{
+    return StringBuilder::formatted("Store32ToStack dst:{}, src:{}"sv, m_dst_stack_offset, m_src_register);
+}
+
 }

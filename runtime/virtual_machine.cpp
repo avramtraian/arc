@@ -26,20 +26,6 @@ const VirtualMachine::RegisterStorage& VirtualMachine::register_storage(bytecode
     return m_registers[register_index];
 }
 
-VirtualMachine::RegisterStorage& VirtualMachine::stack_as_register_storage(usize stack_byte_offset)
-{
-    // NOTE: Check against buffer overflows.
-    ARC_ASSERT(stack_byte_offset + sizeof(RegisterStorage) <= m_stack_byte_count);
-    return *reinterpret_cast<RegisterStorage*>(m_stack_buffer.elements() + stack_byte_offset);
-}
-
-const VirtualMachine::RegisterStorage& VirtualMachine::stack_as_register_storage(usize stack_byte_offset) const
-{
-    // NOTE: Check against buffer overflows.
-    ARC_ASSERT(stack_byte_offset + sizeof(RegisterStorage) <= m_stack_byte_count);
-    return *reinterpret_cast<const RegisterStorage*>(m_stack_buffer.elements() + stack_byte_offset);
-}
-
 usize VirtualMachine::stack_byte_count() const
 {
     return m_stack_byte_count;
@@ -65,6 +51,32 @@ VirtualMachine::RegisterStorage& VirtualMachine::stack_push_register()
 {
     const WriteonlyBytes bytes = stack_push(sizeof(RegisterStorage));
     return *reinterpret_cast<RegisterStorage*>(bytes);
+}
+
+ReadWriteBytes VirtualMachine::stack_as_bytes(usize stack_byte_offset, MAYBE_UNUSED usize stack_byte_count)
+{
+    // NOTE: Check against buffer overflows.
+    ARC_ASSERT(stack_byte_offset + stack_byte_count <= m_stack_byte_count);
+    return reinterpret_cast<ReadWriteBytes>(m_stack_buffer.elements() + stack_byte_offset);
+}
+
+ReadonlyBytes VirtualMachine::stack_as_bytes(usize stack_byte_offset, MAYBE_UNUSED usize stack_byte_count) const
+{
+    // NOTE: Check against buffer overflows.
+    ARC_ASSERT(stack_byte_offset + stack_byte_count <= m_stack_byte_count);
+    return reinterpret_cast<ReadonlyBytes>(m_stack_buffer.elements() + stack_byte_offset);
+}
+
+VirtualMachine::RegisterStorage& VirtualMachine::stack_as_register_storage(usize stack_byte_offset)
+{
+    const ReadWriteBytes bytes = stack_as_bytes(stack_byte_offset, sizeof(RegisterStorage));
+    return *reinterpret_cast<RegisterStorage*>(bytes);
+}
+
+const VirtualMachine::RegisterStorage& VirtualMachine::stack_as_register_storage(usize stack_byte_offset) const
+{
+    const ReadonlyBytes bytes = stack_as_bytes(stack_byte_offset, sizeof(RegisterStorage));
+    return *reinterpret_cast<const RegisterStorage*>(bytes);
 }
 
 }

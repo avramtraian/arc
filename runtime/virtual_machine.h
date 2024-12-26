@@ -27,14 +27,17 @@ public:
     NODISCARD RegisterStorage& register_storage(bytecode::Register);
     NODISCARD const RegisterStorage& register_storage(bytecode::Register) const;
 
-    NODISCARD RegisterStorage& stack_as_register_storage(usize stack_byte_offset);
-    NODISCARD const RegisterStorage& stack_as_register_storage(usize stack_byte_offset) const;
     NODISCARD usize stack_byte_count() const;
-
     WriteonlyBytes stack_push(usize push_byte_count);
     void stack_pop(usize pop_byte_count);
 
     RegisterStorage& stack_push_register();
+
+    NODISCARD ReadWriteBytes stack_as_bytes(usize stack_byte_offset, usize stack_byte_count);
+    NODISCARD ReadonlyBytes stack_as_bytes(usize stack_byte_offset, usize stack_byte_count) const;
+
+    NODISCARD RegisterStorage& stack_as_register_storage(usize stack_byte_offset);
+    NODISCARD const RegisterStorage& stack_as_register_storage(usize stack_byte_offset) const;
 
 private:
     Array<RegisterStorage, static_cast<u8>(bytecode::Register::Count)> m_registers;

@@ -244,4 +244,55 @@ private:
     Register m_src_register;
 };
 
+class Store8ToStackInstruction : public Instruction {
+public:
+    ALWAYS_INLINE Store8ToStackInstruction(u64 dst_stack_offset, Register src_register)
+        : m_dst_stack_offset(dst_stack_offset)
+        , m_src_register(src_register)
+    {}
+
+    virtual ~Store8ToStackInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    u64 m_dst_stack_offset;
+    Register m_src_register;
+};
+
+class Store16ToStackInstruction : public Instruction {
+public:
+    ALWAYS_INLINE Store16ToStackInstruction(u64 dst_stack_offset, Register src_register)
+        : m_dst_stack_offset(dst_stack_offset)
+        , m_src_register(src_register)
+    {}
+
+    virtual ~Store16ToStackInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    u64 m_dst_stack_offset;
+    Register m_src_register;
+};
+
+class Store32ToStackInstruction : public Instruction {
+public:
+    ALWAYS_INLINE Store32ToStackInstruction(u64 dst_stack_offset, Register src_register)
+        : m_dst_stack_offset(dst_stack_offset)
+        , m_src_register(src_register)
+    {}
+
+    virtual ~Store32ToStackInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    u64 m_dst_stack_offset;
+    Register m_src_register;
+};
+
 }
