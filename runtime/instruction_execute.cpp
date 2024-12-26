@@ -45,10 +45,48 @@ void JumpIfInstruction::execute(runtime::Interpreter& interpreter) const
         interpreter.jump(m_jump_address);
 }
 
+void LoadFromStackInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    auto& dst_register = vm.register_storage(m_dst_register);
+    ARC_ASSERT(m_src_stack_offset + sizeof(VirtualMachine::RegisterStorage) <= vm.stack_byte_count());
+    const auto& src_register = vm.stack_as_register_storage(m_src_stack_offset);
+    dst_register.value = src_register.value;
+}
+
 void LoadImmediate8Instruction::execute(Interpreter& interpreter) const
 {
     auto& dst = interpreter.vm().register_storage(m_dst_register);
     dst.value = static_cast<u64>(m_immediate_value);
+}
+
+void PopRegisterInstruction::execute(Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    vm.stack_pop(sizeof(VirtualMachine::RegisterStorage));
+}
+
+void PushImmediate64Instruction::execute(runtime::Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    auto& dst_register = vm.stack_push_register();
+    dst_register.value = m_immediate_value;
+}
+
+void PushRegisterInstruction::execute(Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    auto& dst_register = vm.stack_push_register();
+    const auto& src_register = vm.register_storage(m_src_register);
+    dst_register.value = src_register.value;
+}
+
+void StoreToStackInstruction::execute(Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    auto& dst_register = vm.stack_as_register_storage(m_dst_stack_offset);
+    const auto& src_register = vm.register_storage(m_src_register);
+    dst_register.value = src_register.value;
 }
 
 }

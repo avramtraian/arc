@@ -109,6 +109,23 @@ private:
     JumpAddress m_jump_address;
 };
 
+class LoadFromStackInstruction : public Instruction {
+public:
+    ALWAYS_INLINE LoadFromStackInstruction(Register dst_register, u64 src_stack_offset)
+        : m_dst_register(dst_register)
+        , m_src_stack_offset(src_stack_offset)
+    {}
+
+    virtual ~LoadFromStackInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    Register m_dst_register;
+    u64 m_src_stack_offset;
+};
+
 class LoadImmediate8Instruction : public Instruction {
 public:
     ALWAYS_INLINE LoadImmediate8Instruction(Register dst_register, u8 immediate_value)
@@ -124,6 +141,62 @@ public:
 private:
     Register m_dst_register;
     u8 m_immediate_value;
+};
+
+class PopRegisterInstruction : public Instruction {
+public:
+    PopRegisterInstruction() = default;
+    virtual ~PopRegisterInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+};
+
+class PushImmediate64Instruction : public Instruction {
+public:
+    ALWAYS_INLINE explicit PushImmediate64Instruction(u64 immediate_value)
+        : m_immediate_value(immediate_value)
+    {}
+
+    virtual ~PushImmediate64Instruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    u64 m_immediate_value;
+};
+
+class PushRegisterInstruction : public Instruction {
+public:
+    ALWAYS_INLINE explicit PushRegisterInstruction(Register src_register)
+        : m_src_register(src_register)
+    {}
+
+    virtual ~PushRegisterInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    Register m_src_register;
+};
+
+class StoreToStackInstruction : public Instruction {
+public:
+    ALWAYS_INLINE StoreToStackInstruction(u64 dst_stack_offset, Register src_register)
+        : m_dst_stack_offset(dst_stack_offset)
+        , m_src_register(src_register)
+    {}
+
+    virtual ~StoreToStackInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    u64 m_dst_stack_offset;
+    Register m_src_register;
 };
 
 }

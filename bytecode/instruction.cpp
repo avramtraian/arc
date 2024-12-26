@@ -28,6 +28,11 @@ String JumpInstruction::to_string() const
     return StringBuilder::formatted("Jump address:{}"sv, m_jump_address);
 }
 
+String LoadFromStackInstruction::to_string() const
+{
+    return StringBuilder::formatted("LoadFromStack dst:{}, src:{}"sv, m_dst_register, m_src_stack_offset);
+}
+
 String JumpIfInstruction::to_string() const
 {
     return StringBuilder::formatted("JumpIf condition:{}, address:{}"sv, m_condition_register, m_jump_address);
@@ -36,6 +41,26 @@ String JumpIfInstruction::to_string() const
 String LoadImmediate8Instruction::to_string() const
 {
     return StringBuilder::formatted("LoadImmediate8 dst:{}, value:{}"sv, m_dst_register, m_immediate_value);
+}
+
+String PopRegisterInstruction::to_string() const
+{
+    return StringBuilder::formatted("PopRegister"sv);
+}
+
+String PushImmediate64Instruction::to_string() const
+{
+    return StringBuilder::formatted("PushImmediate64 value:{}"sv, m_immediate_value);
+}
+
+String PushRegisterInstruction::to_string() const
+{
+    return StringBuilder::formatted("PushRegister src:{}"sv, m_src_register);
+}
+
+String StoreToStackInstruction::to_string() const
+{
+    return StringBuilder::formatted("StoreToStack dst:{}, src:{}"sv, m_dst_stack_offset, m_src_register);
 }
 
 }

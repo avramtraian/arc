@@ -8,6 +8,7 @@
 #include <bytecode/register.h>
 #include <core/containers/array.h>
 #include <core/containers/format.h>
+#include <core/containers/vector.h>
 
 namespace arc::runtime {
 
@@ -26,8 +27,18 @@ public:
     NODISCARD RegisterStorage& register_storage(bytecode::Register);
     NODISCARD const RegisterStorage& register_storage(bytecode::Register) const;
 
+    NODISCARD RegisterStorage& stack_as_register_storage(usize stack_byte_offset);
+    NODISCARD const RegisterStorage& stack_as_register_storage(usize stack_byte_offset) const;
+    NODISCARD usize stack_byte_count() const;
+
+    RegisterStorage& stack_push_register();
+    void stack_pop(usize pop_byte_count);
+
 private:
     Array<RegisterStorage, static_cast<u8>(bytecode::Register::Count)> m_registers;
+
+    Vector<u8> m_stack_buffer;
+    usize m_stack_byte_count;
 };
 
 }
