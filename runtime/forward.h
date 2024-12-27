@@ -9,5 +9,6 @@ namespace arc::runtime {
 
 class Interpreter;
 class VirtualMachine;
+class VirtualStack;
 
 }

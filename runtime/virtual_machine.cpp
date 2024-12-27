@@ -8,8 +8,57 @@
 
 namespace arc::runtime {
 
+VirtualStack::VirtualStack(Badge<VirtualMachine>)
+    : m_byte_offset(0)
+{
+    // Initialize the stack buffer with 16KiB of space.
+    m_buffer.allocate_new(16 * 1024);
+}
+
+ReadWriteBytes VirtualStack::push(usize push_byte_count)
+{
+    // TODO: Ensure that the stack pointer will not overflow.
+
+    m_buffer.ensure_byte_count(m_byte_offset + push_byte_count);
+    const ReadWriteBytes bytes = m_buffer.bytes() + m_byte_offset;
+    m_byte_offset += push_byte_count;
+    return bytes;
+}
+
+void VirtualStack::pop(usize pop_byte_count)
+{
+    if (pop_byte_count > m_byte_offset) {
+        // TODO: Throw a memory violation error instead of just crashing the runtime!
+        ARC_ASSERT_NOT_REACHED;
+    }
+
+    m_byte_offset -= pop_byte_count;
+    // NOTE: Ensure that the stack region that was popped contains no valid data.
+    zero_memory(m_buffer.bytes() + m_byte_offset, pop_byte_count);
+}
+
+ReadWriteBytes VirtualStack::at_offset(usize offset, usize byte_count)
+{
+    if (offset + byte_count > m_byte_offset) {
+        // TODO: Throw a memory violation error instead of just crashing the runtime!
+        ARC_ASSERT_NOT_REACHED;
+    }
+
+    return m_buffer.bytes() + offset;
+}
+
+ReadonlyBytes VirtualStack::at_offset(usize offset, usize byte_count) const
+{
+    if (offset + byte_count > m_byte_offset) {
+        // TODO: Throw a memory violation error instead of just crashing the runtime!
+        ARC_ASSERT_NOT_REACHED;
+    }
+
+    return m_buffer.bytes() + offset;
+}
+
 VirtualMachine::VirtualMachine()
-    : m_stack_byte_count(0)
+    : m_stack({})
 {}
 
 VirtualMachine::RegisterStorage& VirtualMachine::register_storage(bytecode::Register reg)
@@ -24,59 +73,6 @@ const VirtualMachine::RegisterStorage& VirtualMachine::register_storage(bytecode
     const u8 register_index = static_cast<u8>(reg);
     ARC_ASSERT(register_index < m_registers.count());
     return m_registers[register_index];
-}
-
-usize VirtualMachine::stack_byte_count() const
-{
-    return m_stack_byte_count;
-}
-
-WriteonlyBytes VirtualMachine::stack_push(usize push_byte_count)
-{
-    m_stack_buffer.set_count(m_stack_byte_count + push_byte_count, 0);
-    const WriteonlyBytes bytes = m_stack_buffer.elements() + m_stack_byte_count;
-    m_stack_byte_count += push_byte_count;
-    return bytes;
-}
-
-void VirtualMachine::stack_pop(usize pop_byte_count)
-{
-    // NOTE: Check against buffer overflows.
-    ARC_ASSERT(pop_byte_count <= m_stack_byte_count);
-    m_stack_byte_count -= pop_byte_count;
-    zero_memory(m_stack_buffer.elements() + m_stack_byte_count, pop_byte_count);
-}
-
-VirtualMachine::RegisterStorage& VirtualMachine::stack_push_register()
-{
-    const WriteonlyBytes bytes = stack_push(sizeof(RegisterStorage));
-    return *reinterpret_cast<RegisterStorage*>(bytes);
-}
-
-ReadWriteBytes VirtualMachine::stack_as_bytes(usize stack_byte_offset, MAYBE_UNUSED usize stack_byte_count)
-{
-    // NOTE: Check against buffer overflows.
-    ARC_ASSERT(stack_byte_offset + stack_byte_count <= m_stack_byte_count);
-    return reinterpret_cast<ReadWriteBytes>(m_stack_buffer.elements() + stack_byte_offset);
-}
-
-ReadonlyBytes VirtualMachine::stack_as_bytes(usize stack_byte_offset, MAYBE_UNUSED usize stack_byte_count) const
-{
-    // NOTE: Check against buffer overflows.
-    ARC_ASSERT(stack_byte_offset + stack_byte_count <= m_stack_byte_count);
-    return reinterpret_cast<ReadonlyBytes>(m_stack_buffer.elements() + stack_byte_offset);
-}
-
-VirtualMachine::RegisterStorage& VirtualMachine::stack_as_register_storage(usize stack_byte_offset)
-{
-    const ReadWriteBytes bytes = stack_as_bytes(stack_byte_offset, sizeof(RegisterStorage));
-    return *reinterpret_cast<RegisterStorage*>(bytes);
-}
-
-const VirtualMachine::RegisterStorage& VirtualMachine::stack_as_register_storage(usize stack_byte_offset) const
-{
-    const ReadonlyBytes bytes = stack_as_bytes(stack_byte_offset, sizeof(RegisterStorage));
-    return *reinterpret_cast<const RegisterStorage*>(bytes);
 }
 
 }

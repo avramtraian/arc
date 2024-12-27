@@ -49,8 +49,7 @@ void LoadFromStackInstruction::execute(runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
     auto& dst_register = vm.register_storage(m_dst_register);
-    ARC_ASSERT(m_src_stack_offset + sizeof(VirtualMachine::RegisterStorage) <= vm.stack_byte_count());
-    const auto& src_register = vm.stack_as_register_storage(m_src_stack_offset);
+    const auto& src_register = vm.stack().at_offset<VirtualMachine::RegisterStorage>(m_src_stack_offset);
     dst_register.value = src_register.value;
 }
 
@@ -63,41 +62,41 @@ void LoadImmediate8Instruction::execute(Interpreter& interpreter) const
 void PopRegisterInstruction::execute(Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
-    vm.stack_pop(sizeof(VirtualMachine::RegisterStorage));
+    vm.stack().pop<VirtualMachine::RegisterStorage>();
 }
 
 void PushImmediate8Instruction::execute(runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
-    const WriteonlyBytes bytes = vm.stack_push(sizeof(u8));
-    *reinterpret_cast<u8*>(bytes) = m_immediate_value;
+    u8& dst = vm.stack().push<u8>();
+    dst = m_immediate_value;
 }
 
 void PushImmediate16Instruction::execute(runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
-    const WriteonlyBytes bytes = vm.stack_push(sizeof(u16));
-    *reinterpret_cast<u16*>(bytes) = m_immediate_value;
+    u16& dst = vm.stack().push<u16>();
+    dst = m_immediate_value;
 }
 
 void PushImmediate32Instruction::execute(runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
-    const WriteonlyBytes bytes = vm.stack_push(sizeof(u32));
-    *reinterpret_cast<u32*>(bytes) = m_immediate_value;
+    u32& dst = vm.stack().push<u32>();
+    dst = m_immediate_value;
 }
 
 void PushImmediate64Instruction::execute(runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
-    const WriteonlyBytes bytes = vm.stack_push(sizeof(u64));
-    *reinterpret_cast<u64*>(bytes) = m_immediate_value;
+    u64& dst = vm.stack().push<u64>();
+    dst = m_immediate_value;
 }
 
 void PushRegisterInstruction::execute(Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
-    auto& dst_register = vm.stack_push_register();
+    auto& dst_register = vm.stack().push<VirtualMachine::RegisterStorage>();
     const auto& src_register = vm.register_storage(m_src_register);
     dst_register.value = src_register.value;
 }
@@ -105,7 +104,7 @@ void PushRegisterInstruction::execute(Interpreter& interpreter) const
 void StoreToStackInstruction::execute(Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
-    auto& dst_register = vm.stack_as_register_storage(m_dst_stack_offset);
+    auto& dst_register = vm.stack().at_offset<VirtualMachine::RegisterStorage>(m_dst_stack_offset);
     const auto& src_register = vm.register_storage(m_src_register);
     dst_register.value = src_register.value;
 }
@@ -113,25 +112,25 @@ void StoreToStackInstruction::execute(Interpreter& interpreter) const
 void Store8ToStackInstruction::execute(Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
-    const ReadWriteBytes bytes = vm.stack_as_bytes(m_dst_stack_offset, sizeof(u8));
+    u8& dst = vm.stack().at_offset<u8>(m_dst_stack_offset);
     const auto& src_register = vm.register_storage(m_src_register);
-    *reinterpret_cast<u8*>(bytes) = static_cast<u8>(src_register.value);
+    dst = static_cast<u8>(src_register.value);
 }
 
 void Store16ToStackInstruction::execute(Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
-    const ReadWriteBytes bytes = vm.stack_as_bytes(m_dst_stack_offset, sizeof(u16));
+    u16& dst = vm.stack().at_offset<u16>(m_dst_stack_offset);
     const auto& src_register = vm.register_storage(m_src_register);
-    *reinterpret_cast<u16*>(bytes) = static_cast<u16>(src_register.value);
+    dst = static_cast<u16>(src_register.value);
 }
 
 void Store32ToStackInstruction::execute(Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
-    const ReadWriteBytes bytes = vm.stack_as_bytes(m_dst_stack_offset, sizeof(u32));
+    u32& dst = vm.stack().at_offset<u32>(m_dst_stack_offset);
     const auto& src_register = vm.register_storage(m_src_register);
-    *reinterpret_cast<u32*>(bytes) = static_cast<u32>(src_register.value);
+    dst = static_cast<u32>(src_register.value);
 }
 
 }
