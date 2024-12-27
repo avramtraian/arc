@@ -111,6 +111,9 @@ constexpr bool is_floating_point = impl::IsFloatingPoint<T>::value;
 template<typename DerivedType, typename BaseType>
 constexpr bool is_derived_from = std::is_base_of_v<BaseType, DerivedType>;
 
+template<typename T>
+constexpr bool is_trivially_destructible = std::is_trivially_destructible_v<T>;
+
 template<typename TypeIfTrue, typename TypeIfFalse, bool condition>
 using ConditionalType = typename impl::ConditionalType<TypeIfTrue, TypeIfFalse, condition>::Type;
 
