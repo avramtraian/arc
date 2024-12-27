@@ -33,6 +33,7 @@ set(ARC_SOURCE_FILES
 
     core/assertions.cpp
     core/assertions.h
+    core/badge.h
     core/containers/array.h
     core/containers/format.cpp
     core/containers/format.h
