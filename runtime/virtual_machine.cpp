@@ -9,52 +9,47 @@
 namespace arc::runtime {
 
 VirtualStack::VirtualStack(Badge<VirtualMachine>)
-    : m_byte_offset(0)
+    : m_stack_pointer(0)
 {
     // Initialize the stack buffer with 16KiB of space.
     m_buffer.allocate_new(16 * 1024);
+    m_stack_pointer = m_buffer.byte_count();
 }
 
 ReadWriteBytes VirtualStack::push(usize push_byte_count)
 {
-    // TODO: Ensure that the stack pointer will not overflow.
-
-    m_buffer.ensure_byte_count(m_byte_offset + push_byte_count);
-    const ReadWriteBytes bytes = m_buffer.bytes() + m_byte_offset;
-    m_byte_offset += push_byte_count;
-    return bytes;
+    ARC_ASSERT(m_stack_pointer >= push_byte_count);
+    m_stack_pointer -= push_byte_count;
+    return m_buffer.bytes() + m_stack_pointer;
 }
 
 void VirtualStack::pop(usize pop_byte_count)
 {
-    if (pop_byte_count > m_byte_offset) {
-        // TODO: Throw a memory violation error instead of just crashing the runtime!
-        ARC_ASSERT_NOT_REACHED;
-    }
+    ARC_ASSERT(m_stack_pointer + pop_byte_count <= m_buffer.byte_count());
 
-    m_byte_offset -= pop_byte_count;
     // NOTE: Ensure that the stack region that was popped contains no valid data.
-    zero_memory(m_buffer.bytes() + m_byte_offset, pop_byte_count);
+    zero_memory(m_buffer.bytes() + m_stack_pointer, pop_byte_count);
+    m_stack_pointer += pop_byte_count;
 }
 
 ReadWriteBytes VirtualStack::at_offset(usize offset, usize byte_count)
 {
-    if (offset + byte_count > m_byte_offset) {
+    if (m_stack_pointer + offset + byte_count > m_buffer.byte_count()) {
         // TODO: Throw a memory violation error instead of just crashing the runtime!
         ARC_ASSERT_NOT_REACHED;
     }
 
-    return m_buffer.bytes() + offset;
+    return m_buffer.bytes() + m_stack_pointer + offset;
 }
 
 ReadonlyBytes VirtualStack::at_offset(usize offset, usize byte_count) const
 {
-    if (offset + byte_count > m_byte_offset) {
+    if (m_stack_pointer + offset + byte_count > m_buffer.byte_count()) {
         // TODO: Throw a memory violation error instead of just crashing the runtime!
         ARC_ASSERT_NOT_REACHED;
     }
 
-    return m_buffer.bytes() + offset;
+    return m_buffer.bytes() + m_stack_pointer + offset;
 }
 
 VirtualMachine::VirtualMachine()

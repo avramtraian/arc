@@ -58,8 +58,8 @@ public:
     }
 
 private:
-    usize m_byte_offset;
     ByteBuffer m_buffer;
+    u64 m_stack_pointer;
 };
 
 class VirtualMachine {
