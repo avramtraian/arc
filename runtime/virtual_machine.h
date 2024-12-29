@@ -5,10 +5,12 @@
 
 #pragma once
 
+#include <bytecode/jump_address.h>
 #include <bytecode/register.h>
 #include <core/badge.h>
 #include <core/containers/array.h>
 #include <core/containers/format.h>
+#include <core/containers/vector.h>
 #include <runtime/forward.h>
 
 namespace arc::runtime {
@@ -62,6 +64,26 @@ private:
     u64 m_stack_pointer;
 };
 
+class VirtualCallStack {
+    ARC_MAKE_NONCOPYABLE(VirtualCallStack);
+    ARC_MAKE_NONMOVABLE(VirtualCallStack);
+
+public:
+    struct CallFrame {
+        bytecode::JumpAddress return_address { 0 };
+        u64 parameters_byte_count { 0 };
+    };
+
+public:
+    VirtualCallStack();
+
+    void push(bytecode::JumpAddress return_address, u64 parameters_byte_count);
+    NODISCARD CallFrame pop();
+
+private:
+    Vector<CallFrame> m_call_stack;
+};
+
 class VirtualMachine {
     ARC_MAKE_NONCOPYABLE(VirtualMachine);
     ARC_MAKE_NONMOVABLE(VirtualMachine);
@@ -80,9 +102,13 @@ public:
     NODISCARD ALWAYS_INLINE VirtualStack& stack() { return m_stack; }
     NODISCARD ALWAYS_INLINE const VirtualStack& stack() const { return m_stack; }
 
+    NODISCARD ALWAYS_INLINE VirtualCallStack& call_stack() { return m_call_stack; }
+    NODISCARD ALWAYS_INLINE const VirtualCallStack& call_stack() const { return m_call_stack; }
+
 private:
     Array<RegisterStorage, static_cast<u8>(bytecode::Register::Count)> m_registers;
     VirtualStack m_stack;
+    VirtualCallStack m_call_stack;
 };
 
 }

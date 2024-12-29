@@ -38,6 +38,33 @@ void Interpreter::jump(bytecode::JumpAddress jump_address)
     m_jump_address = jump_address;
 }
 
+void Interpreter::call(bytecode::JumpAddress callee_address, u64 parameters_byte_count)
+{
+    // TODO: Currently, the call instruction doesn't automatically save the current state of the registers
+    //       to the stack, thus extra instructions must be issued in order to preserve the necessary registers.
+    //       While this is the behaviour of the x86 instruction set, the time saved by only preserving the
+    //       used registers might be insignificant compared to the time required to fetch and execute instructions
+    //       in our virtual machine. Automatically saving all registers to stack might provide better performance!
+
+    // NOTE: When fetching an instruction from the package the instruction pointer is automatically
+    //       incremented, thus the instruction pointer represents the next instruction after the `Call`.
+    const bytecode::JumpAddress return_address = bytecode::JumpAddress(m_instruction_pointer);
+    m_virtual_machine.call_stack().push(return_address, parameters_byte_count);
+    jump(callee_address);
+}
+
+void Interpreter::return_from_call()
+{
+    // Get the last call frame from the virtual machine's call stack.
+    const VirtualCallStack::CallFrame last_call_frame = m_virtual_machine.call_stack().pop();
+
+    // Pop the call parameters from the stack.
+    m_virtual_machine.stack().pop(last_call_frame.parameters_byte_count);
+
+    // Jump back to the call return address.
+    jump(last_call_frame.return_address);
+}
+
 void Interpreter::fetch_and_execute()
 {
     const bytecode::Instruction& instruction = m_package.fetch_instruction(m_instruction_pointer);

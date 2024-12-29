@@ -19,6 +19,11 @@ void AddInstruction::execute(Interpreter& interpreter) const
     dst.value = lhs.value + rhs.value;
 }
 
+void CallInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    interpreter.call(m_callee_address, m_parameters_byte_count);
+}
+
 void CompareGreaterInstruction::execute(runtime::Interpreter& interpreter) const
 {
     auto& dst = interpreter.vm().register_storage(m_dst_register);
@@ -105,6 +110,11 @@ void PushRegisterInstruction::execute(Interpreter& interpreter) const
     auto& dst_register = vm.stack().push<VirtualMachine::RegisterStorage>();
     const auto& src_register = vm.register_storage(m_src_register);
     dst_register.value = src_register.value;
+}
+
+void ReturnInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    interpreter.return_from_call();
 }
 
 void StoreToStackInstruction::execute(Interpreter& interpreter) const

@@ -52,6 +52,29 @@ ReadonlyBytes VirtualStack::at_offset(usize offset, usize byte_count) const
     return m_buffer.bytes() + m_stack_pointer + offset;
 }
 
+VirtualCallStack::VirtualCallStack()
+{}
+
+void VirtualCallStack::push(bytecode::JumpAddress return_address, u64 parameters_byte_count)
+{
+    CallFrame call_frame = {};
+    call_frame.return_address = return_address;
+    call_frame.parameters_byte_count = parameters_byte_count;
+    m_call_stack.push_back(call_frame);
+}
+
+VirtualCallStack::CallFrame VirtualCallStack::pop()
+{
+    if (m_call_stack.is_empty()) {
+        // TODO: Provide more debug information before crashing the runtime.
+        ARC_ASSERT_NOT_REACHED;
+    }
+
+    const CallFrame last_call_frame = m_call_stack.last();
+    m_call_stack.pop_back();
+    return last_call_frame;
+}
+
 VirtualMachine::VirtualMachine()
     : m_stack({})
 {}

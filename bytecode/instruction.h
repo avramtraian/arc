@@ -43,6 +43,23 @@ private:
     Register m_rhs_register;
 };
 
+class CallInstruction : public Instruction {
+public:
+    explicit CallInstruction(JumpAddress callee_address, u64 parameters_byte_count)
+        : m_callee_address(callee_address)
+        , m_parameters_byte_count(parameters_byte_count)
+    {}
+
+    virtual ~CallInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    JumpAddress m_callee_address;
+    u64 m_parameters_byte_count;
+};
+
 class CompareGreaterInstruction : public Instruction {
 public:
     ALWAYS_INLINE CompareGreaterInstruction(Register dst_register, Register lhs_register, Register rhs_register)
@@ -240,6 +257,15 @@ public:
 
 private:
     Register m_src_register;
+};
+
+class ReturnInstruction : public Instruction {
+public:
+    ALWAYS_INLINE ReturnInstruction() {}
+    virtual ~ReturnInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
 };
 
 class StoreToStackInstruction : public Instruction {

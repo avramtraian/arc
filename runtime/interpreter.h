@@ -27,6 +27,9 @@ public:
 
     void jump(bytecode::JumpAddress jump_address);
 
+    void call(bytecode::JumpAddress callee_address, u64 parameters_byte_count);
+    void return_from_call();
+
 private:
     void fetch_and_execute();
 

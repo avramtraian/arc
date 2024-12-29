@@ -13,6 +13,11 @@ String AddInstruction::to_string() const
     return StringBuilder::formatted("AddInstruction dst:{}, lhs:{}, rhs:{}"sv, m_dst_register, m_lhs_register, m_rhs_register);
 }
 
+String CallInstruction::to_string() const
+{
+    return StringBuilder::formatted("Call callee:{}, parameters:{}"sv, m_callee_address, m_parameters_byte_count);
+}
+
 String CompareGreaterInstruction::to_string() const
 {
     return StringBuilder::formatted("CompareGreater dst:{}, lhs:{}, rhs:{}"sv, m_dst_register, m_lhs_register, m_rhs_register);
@@ -76,6 +81,11 @@ String PushImmediate64Instruction::to_string() const
 String PushRegisterInstruction::to_string() const
 {
     return StringBuilder::formatted("PushRegister src:{}"sv, m_src_register);
+}
+
+String ReturnInstruction::to_string() const
+{
+    return StringBuilder::formatted("Return"sv);
 }
 
 String StoreToStackInstruction::to_string() const
