@@ -18,6 +18,11 @@ String CompareGreaterInstruction::to_string() const
     return StringBuilder::formatted("CompareGreater dst:{}, lhs:{}, rhs:{}"sv, m_dst_register, m_lhs_register, m_rhs_register);
 }
 
+String DecrementInstruction::to_string() const
+{
+    return StringBuilder::formatted("Decrement dst:{}"sv, m_dst_register);
+}
+
 String IncrementInstruction::to_string() const
 {
     return StringBuilder::formatted("Increment dst:{}"sv, m_dst_register);

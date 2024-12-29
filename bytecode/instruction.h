@@ -62,6 +62,21 @@ private:
     Register m_rhs_register;
 };
 
+class DecrementInstruction : public Instruction {
+public:
+    ALWAYS_INLINE explicit DecrementInstruction(Register dst_register)
+        : m_dst_register(dst_register)
+    {}
+
+    virtual ~DecrementInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    Register m_dst_register;
+};
+
 class IncrementInstruction : public Instruction {
 public:
     ALWAYS_INLINE explicit IncrementInstruction(Register dst_register)

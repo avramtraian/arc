@@ -27,6 +27,12 @@ void CompareGreaterInstruction::execute(runtime::Interpreter& interpreter) const
     dst.value = lhs.value > rhs.value;
 }
 
+void DecrementInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    auto& dst = interpreter.vm().register_storage(m_dst_register);
+    --dst.value;
+}
+
 void IncrementInstruction::execute(runtime::Interpreter& interpreter) const
 {
     auto& dst = interpreter.vm().register_storage(m_dst_register);
