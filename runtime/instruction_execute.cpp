@@ -133,4 +133,12 @@ void Store32ToStackInstruction::execute(Interpreter& interpreter) const
     dst = static_cast<u32>(src_register.value);
 }
 
+void SubInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    auto& dst = interpreter.vm().register_storage(m_dst_register);
+    const auto& lhs = interpreter.vm().register_storage(m_lhs_register);
+    const auto& rhs = interpreter.vm().register_storage(m_rhs_register);
+    dst.value = lhs.value - rhs.value;
+}
+
 }

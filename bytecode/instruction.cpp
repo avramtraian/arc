@@ -93,4 +93,9 @@ String Store32ToStackInstruction::to_string() const
     return StringBuilder::formatted("Store32ToStack dst:{}, src:{}"sv, m_dst_stack_offset, m_src_register);
 }
 
+String SubInstruction::to_string() const
+{
+    return StringBuilder::formatted("Sub dst:{}, lhs:{}, rhs:{}"sv, m_dst_register, m_lhs_register, m_rhs_register);
+}
+
 }
