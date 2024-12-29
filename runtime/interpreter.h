@@ -19,6 +19,7 @@ class Interpreter {
 public:
     Interpreter(VirtualMachine&, const bytecode::Package&);
 
+    void set_entry_point(u64 entry_point_instruction_offset);
     void execute();
 
     NODISCARD ALWAYS_INLINE VirtualMachine& vm() { return m_virtual_machine; }

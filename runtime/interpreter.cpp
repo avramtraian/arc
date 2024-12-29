@@ -12,13 +12,19 @@ Interpreter::Interpreter(VirtualMachine& virtual_machine, const bytecode::Packag
     : m_virtual_machine(virtual_machine)
     , m_package(package)
     , m_instruction_pointer(0)
-{}
-
-void Interpreter::execute()
 {
     // Always reset the instruction pointer.
     m_instruction_pointer = 0;
+}
 
+void Interpreter::set_entry_point(u64 entry_point_instruction_offset)
+{
+    // TODO: Ensure that the provided entry point instruction offset is actually valid.
+    m_instruction_pointer = entry_point_instruction_offset;
+}
+
+void Interpreter::execute()
+{
     while (m_package.instruction_pointer_is_valid(m_instruction_pointer)) {
         fetch_and_execute();
     }
