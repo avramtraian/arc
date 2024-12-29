@@ -158,6 +158,13 @@ public:
         ++m_count;
     }
 
+    ALWAYS_INLINE void pop_back()
+    {
+        ARC_ASSERT(has_elements());
+        --m_count;
+        m_elements[m_count].~T();
+    }
+
 public:
     ALWAYS_INLINE void clear()
     {
