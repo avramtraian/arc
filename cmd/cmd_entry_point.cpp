@@ -98,11 +98,11 @@ MAYBE_UNUSED static Register compile_fibonacci_recursive(Package& package, u64& 
     // Save the GPR0 register as it will be modified during the recursive call.
     package.emit_instruction<PushRegisterInstruction>(Register::GPR0);
 
-    package.emit_instruction<PushRegisterInstruction>(Register::GPR0);
+    package.emit_instruction<PushInstruction>(8);
     package.emit_instruction<PushRegisterInstruction>(Register::GPR0);
     package.emit_instruction<CallInstruction>(JumpAddress(0), 8);
     package.emit_instruction<LoadFromStackInstruction>(Register::GPR2, 0);
-    package.emit_instruction<PopRegisterInstruction>();
+    package.emit_instruction<PopInstruction>(8);
 
     // Restore the GPR0 register after the recursive call.
     package.emit_instruction<LoadFromStackInstruction>(Register::GPR0, 0);
@@ -115,11 +115,11 @@ MAYBE_UNUSED static Register compile_fibonacci_recursive(Package& package, u64& 
     package.emit_instruction<PushRegisterInstruction>(Register::GPR0);
     package.emit_instruction<PushRegisterInstruction>(Register::GPR2);
 
-    package.emit_instruction<PushRegisterInstruction>(Register::GPR0);
+    package.emit_instruction<PushInstruction>(8);
     package.emit_instruction<PushRegisterInstruction>(Register::GPR0);
     package.emit_instruction<CallInstruction>(JumpAddress(0), 8);
     package.emit_instruction<LoadFromStackInstruction>(Register::GPR3, 0);
-    package.emit_instruction<PopRegisterInstruction>();
+    package.emit_instruction<PopInstruction>(8);
 
     // Restore the GPR0 and GPR2 registers after the recursive call.
     package.emit_instruction<LoadFromStackInstruction>(Register::GPR2, 0);
@@ -133,11 +133,11 @@ MAYBE_UNUSED static Register compile_fibonacci_recursive(Package& package, u64& 
     package.emit_instruction<ReturnInstruction>();
 
     // u64 result = fib(n)
-    package.emit_instruction<PushRegisterInstruction>(Register::GPR0); // push return value space
+    package.emit_instruction<PushInstruction>(8); // push return value space
     package.emit_instruction<PushImmediate64Instruction>(11); // push n
     package.emit_instruction<CallInstruction>(JumpAddress(0), 8);
     package.emit_instruction<LoadFromStackInstruction>(Register::GPR0, 0); // load return value
-    package.emit_instruction<PopRegisterInstruction>();
+    package.emit_instruction<PopInstruction>(8);
 
     out_entry_point = 30;
     return Register::GPR0;

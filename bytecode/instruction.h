@@ -175,6 +175,21 @@ private:
     u8 m_immediate_value;
 };
 
+class PopInstruction : public Instruction {
+public:
+    ALWAYS_INLINE explicit PopInstruction(u64 pop_byte_count)
+        : m_pop_byte_count(pop_byte_count)
+    {}
+
+    virtual ~PopInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    u64 m_pop_byte_count;
+};
+
 class PopRegisterInstruction : public Instruction {
 public:
     PopRegisterInstruction() = default;
@@ -182,6 +197,21 @@ public:
 
     virtual void execute(runtime::Interpreter&) const override;
     virtual String to_string() const override;
+};
+
+class PushInstruction : public Instruction {
+public:
+    ALWAYS_INLINE explicit PushInstruction(u64 push_byte_count)
+        : m_push_byte_count(push_byte_count)
+    {}
+
+    virtual ~PushInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    u64 m_push_byte_count;
 };
 
 class PushImmediate8Instruction : public Instruction {

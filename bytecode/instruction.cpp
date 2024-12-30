@@ -53,9 +53,19 @@ String LoadImmediate8Instruction::to_string() const
     return StringBuilder::formatted("LoadImmediate8 dst:{}, value:{}"sv, m_dst_register, m_immediate_value);
 }
 
+String PopInstruction::to_string() const
+{
+    return StringBuilder::formatted("Pop byte_count:{}"sv, m_pop_byte_count);
+}
+
 String PopRegisterInstruction::to_string() const
 {
     return StringBuilder::formatted("PopRegister"sv);
+}
+
+String PushInstruction::to_string() const
+{
+    return StringBuilder::formatted("Push byte_count:{}"sv, m_push_byte_count);
 }
 
 String PushImmediate8Instruction::to_string() const

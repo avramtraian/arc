@@ -70,10 +70,20 @@ void LoadImmediate8Instruction::execute(Interpreter& interpreter) const
     dst.value = static_cast<u64>(m_immediate_value);
 }
 
+void PopInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    interpreter.vm().stack().pop(m_pop_byte_count);
+}
+
 void PopRegisterInstruction::execute(Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
     vm.stack().pop<VirtualMachine::RegisterStorage>();
+}
+
+void PushInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    interpreter.vm().stack().push(m_push_byte_count);
 }
 
 void PushImmediate8Instruction::execute(runtime::Interpreter& interpreter) const
