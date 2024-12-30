@@ -158,6 +158,57 @@ private:
     u64 m_src_stack_offset;
 };
 
+class Load8FromStackInstruction : public Instruction {
+public:
+    ALWAYS_INLINE Load8FromStackInstruction(Register dst_register, u64 src_stack_offset)
+        : m_dst_register(dst_register)
+        , m_src_stack_offset(src_stack_offset)
+    {}
+
+    virtual ~Load8FromStackInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    Register m_dst_register;
+    u64 m_src_stack_offset;
+};
+
+class Load16FromStackInstruction : public Instruction {
+public:
+    ALWAYS_INLINE Load16FromStackInstruction(Register dst_register, u64 src_stack_offset)
+        : m_dst_register(dst_register)
+        , m_src_stack_offset(src_stack_offset)
+    {}
+
+    virtual ~Load16FromStackInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    Register m_dst_register;
+    u64 m_src_stack_offset;
+};
+
+class Load32FromStackInstruction : public Instruction {
+public:
+    ALWAYS_INLINE Load32FromStackInstruction(Register dst_register, u64 src_stack_offset)
+        : m_dst_register(dst_register)
+        , m_src_stack_offset(src_stack_offset)
+    {}
+
+    virtual ~Load32FromStackInstruction() override = default;
+
+    virtual void execute(runtime::Interpreter&) const override;
+    virtual String to_string() const override;
+
+private:
+    Register m_dst_register;
+    u64 m_src_stack_offset;
+};
+
 class LoadImmediate8Instruction : public Instruction {
 public:
     ALWAYS_INLINE LoadImmediate8Instruction(Register dst_register, u8 immediate_value)

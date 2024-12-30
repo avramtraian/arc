@@ -64,6 +64,30 @@ void LoadFromStackInstruction::execute(runtime::Interpreter& interpreter) const
     dst_register.value = src_register.value;
 }
 
+void Load8FromStackInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    auto& dst_register = vm.register_storage(m_dst_register);
+    const auto& src_value = vm.stack().at_offset<u8>(m_src_stack_offset);
+    dst_register.value = static_cast<u64>(src_value);
+}
+
+void Load16FromStackInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    auto& dst_register = vm.register_storage(m_dst_register);
+    const auto& src_value = vm.stack().at_offset<u16>(m_src_stack_offset);
+    dst_register.value = static_cast<u64>(src_value);
+}
+
+void Load32FromStackInstruction::execute(runtime::Interpreter& interpreter) const
+{
+    VirtualMachine& vm = interpreter.vm();
+    auto& dst_register = vm.register_storage(m_dst_register);
+    const auto& src_value = vm.stack().at_offset<u32>(m_src_stack_offset);
+    dst_register.value = static_cast<u64>(src_value);
+}
+
 void LoadImmediate8Instruction::execute(Interpreter& interpreter) const
 {
     auto& dst = interpreter.vm().register_storage(m_dst_register);
