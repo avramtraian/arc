@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.20)
 project(arc LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS "-Wall")
 
 # Set the output directory for all targets as the same directory where
 # the CMake build files are written to.
