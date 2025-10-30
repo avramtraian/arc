@@ -12,55 +12,71 @@ namespace arc {
 
 template<typename T>
 class OwnPtr {
-    ARC_MAKE_NONCOPYABLE(OwnPtr);
-
+public:
     template<typename Q>
     friend class OwnPtr;
 
     template<typename Q>
     friend OwnPtr<Q> adopt_own(Q*);
+    template<typename Q, typename... Args>
+    friend OwnPtr<Q> create_own(Args&&...);
+
+    ARC_MAKE_NONCOPYABLE(OwnPtr);
 
 public:
     ALWAYS_INLINE OwnPtr()
         : m_instance(nullptr)
     {}
 
+    ALWAYS_INLINE ~OwnPtr() { release(); }
+
+    ALWAYS_INLINE OwnPtr(OwnPtr&& other) noexcept
+        : m_instance(other.m_instance)
+    {
+        other.m_instance = nullptr;
+    }
+
+    ALWAYS_INLINE OwnPtr& operator=(OwnPtr&& other) noexcept
+    {
+        // Handle the self-assignment case.
+        if (this == &other)
+            return *this;
+
+        release();
+
+        m_instance = other.m_instance;
+        other.m_instance = nullptr;
+
+        return *this;
+    }
+
+public:
     template<typename Q>
-    requires (is_derived_from<Q, T>)
+    requires (!std::is_same_v<T, Q> && std::is_base_of_v<T, Q>)
     ALWAYS_INLINE OwnPtr(OwnPtr<Q>&& other) noexcept
         : m_instance(other.m_instance)
     {
         other.m_instance = nullptr;
     }
 
-    ALWAYS_INLINE OwnPtr(NullptrType)
-        : m_instance(nullptr)
-    {}
-
     template<typename Q>
-    requires (is_derived_from<Q, T>)
+    requires (!std::is_same_v<T, Q> && std::is_base_of_v<T, Q>)
     ALWAYS_INLINE OwnPtr& operator=(OwnPtr<Q>&& other) noexcept
     {
-        // Handle self-assignment case.
-        if (this == &other)
+        // Handle the self-assignment case.
+        if ((void*)(this) == (void*)(&other))
             return *this;
 
         release();
+
         m_instance = other.m_instance;
         other.m_instance = nullptr;
+
         return *this;
     }
-
-    ALWAYS_INLINE OwnPtr& operator=(NullptrType)
-    {
-        release();
-        return *this;
-    }
-
-    ALWAYS_INLINE ~OwnPtr() { release(); }
 
 public:
-    NODISCARD ALWAYS_INLINE bool is_valid() const { return m_instance; }
+    NODISCARD ALWAYS_INLINE bool is_valid() const { return m_instance != nullptr; }
 
     NODISCARD ALWAYS_INLINE T* get()
     {
@@ -74,36 +90,40 @@ public:
         return m_instance;
     }
 
-    NODISCARD ALWAYS_INLINE T* operator->() { return get(); }
-    NODISCARD ALWAYS_INLINE const T* operator->() const { return get(); }
+    NODISCARD ALWAYS_INLINE T* get_non_const() const
+    {
+        ARC_ASSERT(is_valid());
+        return m_instance;
+    }
 
     NODISCARD ALWAYS_INLINE T& dereference() { return *get(); }
     NODISCARD ALWAYS_INLINE const T& dereference() const { return *get(); }
+    NODISCARD ALWAYS_INLINE T& dereference_non_const() const { return *get_non_const(); }
 
-    NODISCARD ALWAYS_INLINE T& operator*() { return dereference(); }
-    NODISCARD ALWAYS_INLINE const T& operator*() const { return dereference(); }
+    NODISCARD ALWAYS_INLINE T* operator->() { return get(); }
+    NODISCARD ALWAYS_INLINE const T* operator->() const { return get(); }
+
+    NODISCARD ALWAYS_INLINE T& operator*() { return *get(); }
+    NODISCARD ALWAYS_INLINE const T& operator*() const { return *get(); }
 
 public:
     ALWAYS_INLINE void release()
     {
         if (m_instance) {
-            delete m_instance;
+            T* instance = m_instance;
             m_instance = nullptr;
+            delete instance;
         }
     }
 
     template<typename Q>
     NODISCARD ALWAYS_INLINE OwnPtr<Q> as()
     {
-        Q* casted_instance = static_cast<Q*>(m_instance);
+        OwnPtr<Q> casted;
+        casted.m_instance = m_instance;
         m_instance = nullptr;
-        return OwnPtr<Q>(casted_instance);
+        return casted;
     }
-
-private:
-    ALWAYS_INLINE explicit OwnPtr(T* instance)
-        : m_instance(instance)
-    {}
 
 private:
     T* m_instance;
@@ -112,14 +132,17 @@ private:
 template<typename T>
 NODISCARD ALWAYS_INLINE OwnPtr<T> adopt_own(T* instance)
 {
-    return OwnPtr<T>(instance);
+    OwnPtr<T> own_ptr;
+    own_ptr.m_instance = instance;
+    return own_ptr;
 }
 
 template<typename T, typename... Args>
 NODISCARD ALWAYS_INLINE OwnPtr<T> create_own(Args&&... args)
 {
-    T* instance = new T(forward<Args>(args)...);
-    return adopt_own<T>(instance);
+    OwnPtr<T> own_ptr;
+    own_ptr.m_instance = new T(forward<Args>(args)...);
+    return own_ptr;
 }
 
 }
