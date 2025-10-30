@@ -28,6 +28,18 @@ void StringBuilder::append(StringView string_view)
     m_byte_count += string_view.byte_count();
 }
 
+void StringBuilder::append_indentation(u32 indentation_level)
+{
+    ensure_append_byte_count(indentation_level * sizeof(' '));
+    set_memory(m_characters_buffer.bytes() + m_byte_count, ' ', indentation_level);
+    m_byte_count += indentation_level;
+}
+
+void StringBuilder::append_newline()
+{
+    append("\n"sv);
+}
+
 void StringBuilder::ensure_append_byte_count(usize append_byte_count)
 {
     const usize buffer_required_byte_count = m_byte_count + append_byte_count;

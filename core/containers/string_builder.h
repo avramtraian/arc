@@ -33,6 +33,10 @@ public:
 public:
     void append(StringView string_view);
 
+    void append_indentation(u32 indentation_level);
+
+    void append_newline();
+
     template<typename... Args>
     void append(StringView format, Args&&... parameters)
     {
@@ -51,8 +55,7 @@ private:
     void ensure_append_byte_count(usize append_byte_count);
 
     template<typename CurrentParameter, typename... Args>
-    ALWAYS_INLINE void formatted_implementation(StringView& format, const CurrentParameter& current_parameter,
-                                                Args&&... parameters)
+    ALWAYS_INLINE void formatted_implementation(StringView& format, const CurrentParameter& current_parameter, Args&&... parameters)
     {
         consume_until_format_specifier(format);
         // NOTE: The number of parameters passed to the `formatted` function doesn't match the
