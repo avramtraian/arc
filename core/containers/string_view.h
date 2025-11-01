@@ -79,7 +79,7 @@ private:
     #pragma warning(disable : 4455)
 #endif // ARC_COMPILER_MSVC
 
-NODISCARD ALWAYS_INLINE StringView operator""sv(const char* literal, usize literal_length)
+NODISCARD ALWAYS_INLINE StringView operator""sv(const char* literal, std::size_t literal_length)
 {
     return StringView::from_utf8(literal, literal_length);
 }
