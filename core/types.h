@@ -29,9 +29,6 @@ using s64 = signed long long;
 using f32 = float;
 using f64 = double;
 
-using usize = unsigned long long;
-using ssize = signed long long;
-using uintptr = unsigned long long;
 // clang-format off
 static_assert(sizeof(u8)  == 1, "Primitive type 'u8' expected to be 8-bit!");
 static_assert(sizeof(u16) == 2, "Primitive type 'u16' expected to be 16-bit!");
@@ -43,6 +40,17 @@ static_assert(sizeof(s32) == 4, "Primitive type 's32' expected to be 32-bit!");
 static_assert(sizeof(s64) == 8, "Primitive type 's64' expected to be 64-bit!");
 // clang-format on
 
+#if ARC_PLATFORM_ARCHITECTURE_X32 || ARC_PLATFORM_ARCHITECTURE_ARM32
+using usize = u32;
+using ssize = s32;
+using uintptr = u32;
+#endif // 32-bit architectures.
+
+#if ARC_PLATFORM_ARCHITECTURE_X64 || ARC_PLATFORM_ARCHITECTURE_ARM64
+using usize = u64;
+using ssize = s64;
+using uintptr = u64;
+#endif // 64-bit architectures.
 
 using ReadonlyByte = const u8;
 using WriteonlyByte = u8;
