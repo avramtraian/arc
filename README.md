@@ -31,7 +31,7 @@ something more complete. Use it, study it, extend it, but keep in mind its curre
 
 *Note*: Only Windows and Linux-based distributions are currently supported.
 
-**1.** Ensure the following perequisite tools are installed:
+**1.** Ensure the following prerequisite tools are installed:
 <div style="margin-left: 2em">
 
 - A *C++20* (or later) compliant **compiler** (*clang* is the only one tested against).
@@ -58,7 +58,7 @@ cmake --build build/Debug
 
 </div>
 
-This process (if successfully) will generate a an executable named ***arc*** inside the *build/Debug* directory (or
+This process (if successfully) will generate an executable named ***arc*** inside the *build/Debug* directory (or
 *build/Release* if that is the configuration you are building) that you can just run.
 
 ## Next Steps & Roadmap
