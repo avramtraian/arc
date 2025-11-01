@@ -9,6 +9,7 @@
 
 // Headers from the standard library.
 #include <cstdarg>
+#include <cstdint>
 #include <initializer_list>
 #include <new>
 #include <type_traits>
