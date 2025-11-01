@@ -175,7 +175,7 @@ MAYBE_UNUSED static void generate_fibonacci_ast()
         auto literal_signed_int_1 = ast::create_node<ast::LiteralExpression>(ast::LiteralType::SignedInteger);
         literal_signed_int_1->set_signed_integer(1);
         auto prev_fib_assignment_expression = ast::create_node<ast::AssignmentExpression>(
-            ast::create_node<ast::DeclarationExpression>("int"sv, "prev_fib"sv),
+            ast::create_node<ast::VariableDeclaration>("int"sv, "prev_fib"sv),
             move(literal_signed_int_1)
         );
         function_body->add_child(move(prev_fib_assignment_expression));
@@ -186,7 +186,7 @@ MAYBE_UNUSED static void generate_fibonacci_ast()
         auto literal_signed_int_1 = ast::create_node<ast::LiteralExpression>(ast::LiteralType::SignedInteger);
         literal_signed_int_1->set_signed_integer(1);
         auto prev_fib_assignment_expression = ast::create_node<ast::AssignmentExpression>(
-            ast::create_node<ast::DeclarationExpression>("int"sv, "curr_fib"sv),
+            ast::create_node<ast::VariableDeclaration>("int"sv, "curr_fib"sv),
             move(literal_signed_int_1)
         );
         function_body->add_child(move(prev_fib_assignment_expression));
@@ -197,7 +197,7 @@ MAYBE_UNUSED static void generate_fibonacci_ast()
     {
         // int new_fib = prev_fib + curr_fib;
         auto assignment_expression = ast::create_node<ast::AssignmentExpression>(
-            ast::create_node<ast::DeclarationExpression>("int"sv, "new_fib"sv),
+            ast::create_node<ast::VariableDeclaration>("int"sv, "new_fib"sv),
             ast::create_node<ast::BinaryExpression>(
                 ast::BinaryOperation::Add,
                 ast::create_node<ast::IdentifierExpression>("prev_fib"sv),

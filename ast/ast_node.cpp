@@ -8,6 +8,19 @@
 
 namespace arc::ast {
 
+void ExecutionScope::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+{
+    for (usize child_index = 0; child_index < m_children.count(); ++child_index) {
+        builder.append_indentation(indentation_level);
+        builder.append("({}) [{}]\n"sv, m_children[child_index]->class_name(), child_index);
+        m_children[child_index]->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
+    }
+}
+
+//========================================================================================================================================//
+//----------------------------------------------------------- EXPRESSION NODES -----------------------------------------------------------//
+//========================================================================================================================================//
+
 StringView unary_operation_to_string_view(UnaryOperation unary_operation)
 {
     switch (unary_operation) {
@@ -76,12 +89,6 @@ void BinaryExpression::dump_as_string(StringBuilder& builder, u32 indentation_le
     m_right_expression->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
 }
 
-void IdentifierExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
-{
-    builder.append_indentation(indentation_level);
-    builder.append("Identifier name: {}\n"sv, m_identifier_name);
-}
-
 StringView literal_type_to_string_view(LiteralType literal_type)
 {
     switch (literal_type) {
@@ -108,7 +115,7 @@ void LiteralExpression::dump_as_string(StringBuilder& builder, u32 indentation_l
     // Type.
     builder.append_indentation(indentation_level);
     builder.append("Type:  {}\n"sv, literal_type_to_string_view(m_literal_type));
-    // Value.
+// Value.
 #define _ARC_DUMP_LITERAL_VALUE(e, n, t)                \
     if (m_literal_type == LiteralType::e) {             \
         builder.append_indentation(indentation_level);  \
@@ -119,8 +126,11 @@ void LiteralExpression::dump_as_string(StringBuilder& builder, u32 indentation_l
 #undef _ARC_DUMP_LITERAL_VALUE
 }
 
-void CallExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
-{}
+void IdentifierExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+{
+    builder.append_indentation(indentation_level);
+    builder.append("Identifier name: {}\n"sv, m_identifier_name);
+}
 
 void AssignmentExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
@@ -137,7 +147,41 @@ void AssignmentExpression::dump_as_string(StringBuilder& builder, u32 indentatio
 void MemberExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {}
 
-void DeclarationExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void CallExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+{}
+
+//========================================================================================================================================//
+//------------------------------------------------------------ STRUCTURE NODES -----------------------------------------------------------//
+//========================================================================================================================================//
+
+void WhileStructure::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+{
+    builder.append_indentation(indentation_level);
+    builder.append("({})\n"sv, m_body_execution_scope->class_name());
+    m_body_execution_scope->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
+}
+
+//========================================================================================================================================//
+//------------------------------------------------------------ STATEMENT NODES -----------------------------------------------------------//
+//========================================================================================================================================//
+
+void ReturnStatement::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+{
+    builder.append_indentation(indentation_level);
+    if (m_return_value_expression.is_valid()) {
+        builder.append("({})\n"sv, m_return_value_expression->class_name());
+        m_return_value_expression->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
+    }
+    else {
+        builder.append("(void)\n"sv);
+    }
+}
+
+//========================================================================================================================================//
+//----------------------------------------------------------- DECLARATION NODES ----------------------------------------------------------//
+//========================================================================================================================================//
+
+void VariableDeclaration::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
     // Variable type.
     builder.append_indentation(indentation_level);
@@ -145,22 +189,6 @@ void DeclarationExpression::dump_as_string(StringBuilder& builder, u32 indentati
     // Variable identifier name.
     builder.append_indentation(indentation_level);
     builder.append("Variable dentifier name: {}\n"sv, m_variable_identifier_name);
-}
-
-void ExecutionScope::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
-{
-    for (usize child_index = 0; child_index < m_children.count(); ++child_index) {
-        builder.append_indentation(indentation_level);
-        builder.append("({}) [{}]\n"sv, m_children[child_index]->class_name(), child_index);
-        m_children[child_index]->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
-    }
-}
-
-void WhileStructure::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
-{
-    builder.append_indentation(indentation_level);
-    builder.append("({})\n"sv, m_body_execution_scope->class_name());
-    m_body_execution_scope->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
 }
 
 void FunctionDeclaration::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
@@ -188,18 +216,6 @@ void FunctionDeclaration::dump_as_string(StringBuilder& builder, u32 indentation
     builder.append_indentation(indentation_level);
     builder.append("Body: ({})\n"sv, m_body_execution_scope->class_name());
     m_body_execution_scope->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
-}
-
-void ReturnStatement::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
-{
-    builder.append_indentation(indentation_level);
-    if (m_return_value_expression.is_valid()) {
-        builder.append("({})\n"sv, m_return_value_expression->class_name());
-        m_return_value_expression->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
-    }
-    else {
-        builder.append("(void)\n"sv);
-    }
 }
 
 } // namespace arc::ast
