@@ -8,6 +8,7 @@
 #include <core/assertions.h>
 #include <core/containers/own_ptr.h>
 #include <core/containers/string.h>
+#include <core/containers/string_builder.h>
 #include <core/containers/vector.h>
 
 namespace arc::ast {
