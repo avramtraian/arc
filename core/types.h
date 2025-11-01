@@ -32,6 +32,17 @@ using f64 = double;
 using usize = unsigned long long;
 using ssize = signed long long;
 using uintptr = unsigned long long;
+// clang-format off
+static_assert(sizeof(u8)  == 1, "Primitive type 'u8' expected to be 8-bit!");
+static_assert(sizeof(u16) == 2, "Primitive type 'u16' expected to be 16-bit!");
+static_assert(sizeof(u32) == 4, "Primitive type 'u32' expected to be 32-bit!");
+static_assert(sizeof(u64) == 8, "Primitive type 'u64' expected to be 64-bit!");
+static_assert(sizeof(s8)  == 1, "Primitive type 's8' expected to be 8-bit!");
+static_assert(sizeof(s16) == 2, "Primitive type 's16' expected to be 16-bit!");
+static_assert(sizeof(s32) == 4, "Primitive type 's32' expected to be 32-bit!");
+static_assert(sizeof(s64) == 8, "Primitive type 's64' expected to be 64-bit!");
+// clang-format on
+
 
 using ReadonlyByte = const u8;
 using WriteonlyByte = u8;
