@@ -8,11 +8,11 @@
 
 namespace arc::ast {
 
-StringView ast_unary_operation_to_string_view(ASTUnaryOperation unary_operation)
+StringView unary_operation_to_string_view(UnaryOperation unary_operation)
 {
     switch (unary_operation) {
-#define _ARC_CASE(x)           \
-    case ASTUnaryOperation::x: \
+#define _ARC_CASE(x)        \
+    case UnaryOperation::x: \
         return #x##sv;
 
         ARC_ENUMERATE_UNARY_OPERATIONS(_ARC_CASE)
@@ -23,28 +23,28 @@ StringView ast_unary_operation_to_string_view(ASTUnaryOperation unary_operation)
     }
 }
 
-String ast_unary_operation_to_string(ASTUnaryOperation unary_operation)
+String unary_operation_to_string(UnaryOperation unary_operation)
 {
-    const StringView unary_operation_string_view = ast_unary_operation_to_string_view(unary_operation);
+    const StringView unary_operation_string_view = unary_operation_to_string_view(unary_operation);
     return String(unary_operation_string_view);
 }
 
-void ASTUnaryExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void UnaryExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
     // Operation.
     builder.append_indentation(indentation_level);
-    builder.append("Operation: {}\n"sv, ast_unary_operation_to_string_view(m_unary_operation));
+    builder.append("Operation: {}\n"sv, unary_operation_to_string_view(m_unary_operation));
     // Operand.
     builder.append_indentation(indentation_level);
     builder.append("Operand: ({})\n"sv, m_expression->class_name());
     m_expression->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
 }
 
-StringView ast_binary_operation_to_string_view(ASTBinaryOperation binary_operation)
+StringView binary_operation_to_string_view(BinaryOperation binary_operation)
 {
     switch (binary_operation) {
-#define _ARC_CASE(x)            \
-    case ASTBinaryOperation::x: \
+#define _ARC_CASE(x)         \
+    case BinaryOperation::x: \
         return #x##sv;
 
         ARC_ENUMERATE_BINARY_OPERATIONS(_ARC_CASE)
@@ -55,17 +55,17 @@ StringView ast_binary_operation_to_string_view(ASTBinaryOperation binary_operati
     }
 }
 
-String ast_binary_operation_to_string(ASTBinaryOperation binary_operation)
+String binary_operation_to_string(BinaryOperation binary_operation)
 {
-    const StringView binary_operation_string_view = ast_binary_operation_to_string_view(binary_operation);
+    const StringView binary_operation_string_view = binary_operation_to_string_view(binary_operation);
     return String(binary_operation_string_view);
 }
 
-void ASTBinaryExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void BinaryExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
     // Operation.
     builder.append_indentation(indentation_level);
-    builder.append("Operation: {}\n"sv, ast_binary_operation_to_string_view(m_binary_operation));
+    builder.append("Operation: {}\n"sv, binary_operation_to_string_view(m_binary_operation));
     // Left operand.
     builder.append_indentation(indentation_level);
     builder.append("Left operand: ({})\n"sv, m_left_expression->class_name());
@@ -76,17 +76,17 @@ void ASTBinaryExpression::dump_as_string(StringBuilder& builder, u32 indentation
     m_right_expression->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
 }
 
-void ASTIdentifierExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void IdentifierExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
     builder.append_indentation(indentation_level);
     builder.append("Identifier name: {}\n"sv, m_identifier_name);
 }
 
-StringView ast_literal_type_to_string_view(ASTLiteralType literal_type)
+StringView literal_type_to_string_view(LiteralType literal_type)
 {
     switch (literal_type) {
-#define _ARC_CASE(x, n, t)  \
-    case ASTLiteralType::x: \
+#define _ARC_CASE(x, n, t) \
+    case LiteralType::x:   \
         return #x##sv;
 
         ARC_ENUMERATE_LITERAL_TYPES(_ARC_CASE)
@@ -97,20 +97,20 @@ StringView ast_literal_type_to_string_view(ASTLiteralType literal_type)
     }
 }
 
-String ast_literal_type_to_string(ASTLiteralType literal_type)
+String literal_type_to_string(LiteralType literal_type)
 {
-    const StringView literal_type_string_view = ast_literal_type_to_string_view(literal_type);
+    const StringView literal_type_string_view = literal_type_to_string_view(literal_type);
     return String(literal_type_string_view);
 }
 
-void ASTLiteralExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void LiteralExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
     // Type.
     builder.append_indentation(indentation_level);
-    builder.append("Type:  {}\n"sv, ast_literal_type_to_string_view(m_literal_type));
+    builder.append("Type:  {}\n"sv, literal_type_to_string_view(m_literal_type));
     // Value.
 #define _ARC_DUMP_LITERAL_VALUE(e, n, t)                \
-    if (m_literal_type == ASTLiteralType::e) {          \
+    if (m_literal_type == LiteralType::e) {             \
         builder.append_indentation(indentation_level);  \
         builder.append("Value: {}\n"sv, m_literal_##n); \
     }
@@ -119,10 +119,10 @@ void ASTLiteralExpression::dump_as_string(StringBuilder& builder, u32 indentatio
 #undef _ARC_DUMP_LITERAL_VALUE
 }
 
-void ASTCallExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void CallExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {}
 
-void ASTAssignmentExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void AssignmentExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
     // LHS.
     builder.append_indentation(indentation_level);
@@ -134,10 +134,10 @@ void ASTAssignmentExpression::dump_as_string(StringBuilder& builder, u32 indenta
     m_right_expression->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
 }
 
-void ASTMemberExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void MemberExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {}
 
-void ASTDeclarationExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void DeclarationExpression::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
     // Variable type.
     builder.append_indentation(indentation_level);
@@ -147,7 +147,7 @@ void ASTDeclarationExpression::dump_as_string(StringBuilder& builder, u32 indent
     builder.append("Variable dentifier name: {}\n"sv, m_variable_identifier_name);
 }
 
-void ASTExecutionScope::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void ExecutionScope::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
     for (usize child_index = 0; child_index < m_children.count(); ++child_index) {
         builder.append_indentation(indentation_level);
@@ -156,14 +156,14 @@ void ASTExecutionScope::dump_as_string(StringBuilder& builder, u32 indentation_l
     }
 }
 
-void ASTWhileStructure::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void WhileStructure::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
     builder.append_indentation(indentation_level);
     builder.append("({})\n"sv, m_body_execution_scope->class_name());
     m_body_execution_scope->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
 }
 
-void ASTFunctionDeclaration::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void FunctionDeclaration::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
     // Return type.
     builder.append_indentation(indentation_level);
@@ -190,7 +190,7 @@ void ASTFunctionDeclaration::dump_as_string(StringBuilder& builder, u32 indentat
     m_body_execution_scope->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
 }
 
-void ASTReturnStatement::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
+void ReturnStatement::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
     builder.append_indentation(indentation_level);
     if (m_return_value_expression.is_valid()) {

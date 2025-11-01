@@ -161,21 +161,21 @@ MAYBE_UNUSED static void generate_fibonacci_ast()
         int result = fib(20);
     */
 
-    auto literal_signed_int_20 = ast::create_node<ast::ASTLiteralExpression>(ast::ASTLiteralType::SignedInteger);
+    auto literal_signed_int_20 = ast::create_node<ast::LiteralExpression>(ast::LiteralType::SignedInteger);
     literal_signed_int_20->set_signed_integer(20);
 
     // clang-format off
-    Vector<ast::ASTFunctionDeclaration::Parameter> function_parameters;
+    Vector<ast::FunctionDeclaration::Parameter> function_parameters;
     function_parameters.push_back({ "int"sv, "n"sv });
 
-    auto function_body = ast::create_node<ast::ASTExecutionScope>();
+    auto function_body = ast::create_node<ast::ExecutionScope>();
 
     {
         // int prev_fib = 1;
-        auto literal_signed_int_1 = ast::create_node<ast::ASTLiteralExpression>(ast::ASTLiteralType::SignedInteger);
+        auto literal_signed_int_1 = ast::create_node<ast::LiteralExpression>(ast::LiteralType::SignedInteger);
         literal_signed_int_1->set_signed_integer(1);
-        auto prev_fib_assignment_expression = ast::create_node<ast::ASTAssignmentExpression>(
-            ast::create_node<ast::ASTDeclarationExpression>("int"sv, "prev_fib"sv),
+        auto prev_fib_assignment_expression = ast::create_node<ast::AssignmentExpression>(
+            ast::create_node<ast::DeclarationExpression>("int"sv, "prev_fib"sv),
             move(literal_signed_int_1)
         );
         function_body->add_child(move(prev_fib_assignment_expression));
@@ -183,25 +183,25 @@ MAYBE_UNUSED static void generate_fibonacci_ast()
 
     {
         // int curr_fib = 1;
-        auto literal_signed_int_1 = ast::create_node<ast::ASTLiteralExpression>(ast::ASTLiteralType::SignedInteger);
+        auto literal_signed_int_1 = ast::create_node<ast::LiteralExpression>(ast::LiteralType::SignedInteger);
         literal_signed_int_1->set_signed_integer(1);
-        auto prev_fib_assignment_expression = ast::create_node<ast::ASTAssignmentExpression>(
-            ast::create_node<ast::ASTDeclarationExpression>("int"sv, "curr_fib"sv),
+        auto prev_fib_assignment_expression = ast::create_node<ast::AssignmentExpression>(
+            ast::create_node<ast::DeclarationExpression>("int"sv, "curr_fib"sv),
             move(literal_signed_int_1)
         );
         function_body->add_child(move(prev_fib_assignment_expression));
     }
 
-    auto while_body = ast::create_node<ast::ASTExecutionScope>();
+    auto while_body = ast::create_node<ast::ExecutionScope>();
 
     {
         // int new_fib = prev_fib + curr_fib;
-        auto assignment_expression = ast::create_node<ast::ASTAssignmentExpression>(
-            ast::create_node<ast::ASTDeclarationExpression>("int"sv, "new_fib"sv),
-            ast::create_node<ast::ASTBinaryExpression>(
-                ast::ASTBinaryOperation::Add,
-                ast::create_node<ast::ASTIdentifierExpression>("prev_fib"sv),
-                ast::create_node<ast::ASTIdentifierExpression>("curr_fib"sv)
+        auto assignment_expression = ast::create_node<ast::AssignmentExpression>(
+            ast::create_node<ast::DeclarationExpression>("int"sv, "new_fib"sv),
+            ast::create_node<ast::BinaryExpression>(
+                ast::BinaryOperation::Add,
+                ast::create_node<ast::IdentifierExpression>("prev_fib"sv),
+                ast::create_node<ast::IdentifierExpression>("curr_fib"sv)
             )
         );
         while_body->add_child(move(assignment_expression));
@@ -209,35 +209,35 @@ MAYBE_UNUSED static void generate_fibonacci_ast()
 
     {
         // prev_fib = curr_fib;
-        auto assignment_expression = ast::create_node<ast::ASTAssignmentExpression>(
-            ast::create_node<ast::ASTIdentifierExpression>("prev_fib"sv),
-            ast::create_node<ast::ASTIdentifierExpression>("curr_fib"sv)
+        auto assignment_expression = ast::create_node<ast::AssignmentExpression>(
+            ast::create_node<ast::IdentifierExpression>("prev_fib"sv),
+            ast::create_node<ast::IdentifierExpression>("curr_fib"sv)
         );
         while_body->add_child(move(assignment_expression));
     }
 
     {
         // curr_fib = new_fib;
-        auto assignment_expression = ast::create_node<ast::ASTAssignmentExpression>(
-            ast::create_node<ast::ASTIdentifierExpression>("curr_fib"sv),
-            ast::create_node<ast::ASTIdentifierExpression>("new_fib"sv)
+        auto assignment_expression = ast::create_node<ast::AssignmentExpression>(
+            ast::create_node<ast::IdentifierExpression>("curr_fib"sv),
+            ast::create_node<ast::IdentifierExpression>("new_fib"sv)
         );
         while_body->add_child(move(assignment_expression));
     }
 
     // k < n
-    auto while_condition_expression = ast::create_node<ast::ASTBinaryExpression>(
-        ast::ASTBinaryOperation::CompareLess,
-        ast::create_node<ast::ASTIdentifierExpression>("k"sv),
-        ast::create_node<ast::ASTIdentifierExpression>("n"sv)
+    auto while_condition_expression = ast::create_node<ast::BinaryExpression>(
+        ast::BinaryOperation::CompareLess,
+        ast::create_node<ast::IdentifierExpression>("k"sv),
+        ast::create_node<ast::IdentifierExpression>("n"sv)
     );
 
-    function_body->add_child(ast::create_node<ast::ASTWhileStructure>(move(while_condition_expression), move(while_body)));
-    function_body->add_child(ast::create_node<ast::ASTReturnStatement>(ast::create_node<ast::ASTIdentifierExpression>("curr_fib"sv)));
+    function_body->add_child(ast::create_node<ast::WhileStructure>(move(while_condition_expression), move(while_body)));
+    function_body->add_child(ast::create_node<ast::ReturnStatement>(ast::create_node<ast::IdentifierExpression>("curr_fib"sv)));
 
-    auto function_declaration = ast::create_node<ast::ASTFunctionDeclaration>("int"sv, "fib"sv, function_parameters, move(function_body));
+    auto function_declaration = ast::create_node<ast::FunctionDeclaration>("int"sv, "fib"sv, function_parameters, move(function_body));
 
-    auto program = ast::create_node<ast::ASTExecutionScope>();
+    auto program = ast::create_node<ast::ExecutionScope>();
     program->add_child(move(function_declaration));
     // clang-format on
 
