@@ -17,8 +17,37 @@ public:
     static_assert(inline_capacity > 0);
 
     struct HeapBuffer {
+#if ARC_COMPILER_CLANG
+    // Temporarily disables the following compiler warning:
+    // warning: flexible array members are a C99 feature [-Wc99-extensions]
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wc99-extensions"
+#endif // ARC_COMPILER_CLANG
+#if ARC_COMPILER_GCC
+    // Temporarily disables the following compiler warning:
+    // warning: ISO C++ forbids flexible array member 'characters' [-Wpedantic]
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wpedantic"
+#endif // ARC_COMPILER_GCC
+#if ARC_COMPILER_MSVC
+    // Temporarily disables the following compiler warning:
+    // 'nonstandard extension used: zero-sized array in struct/union'
+    #pragma warning(push)
+    #pragma warning(disable : 4200)
+#endif // ARC_COMPILER_MSVC
+
         u32 reference_count { 0 };
         char characters[];
+
+#if ARC_COMPILER_CLANG
+    #pragma clang diagnostic pop
+#endif // ARC_COMPILER_CLANG
+#if ARC_COMPILER_GCC
+    #pragma GCC diagnostic pop
+#endif // ARC_COMPILER_GCC
+#if ARC_COMPILER_MSVC
+    #pragma warning(pop)
+#endif // ARC_COMPILER_MSVC
     };
 
     friend class StringBuilder;
