@@ -151,10 +151,14 @@
     #define ALWAYS_INLINE           __attribute__((always_inline)) inline
     #define ARC_FUNCTION            __PRETTY_FUNCTION__
     #define ARC_PLATFORM_DEBUGBREAK __builtin_trap()
+    #define ARC_NORETURN            __attribute__((noreturn))
+    #define ARC_UNREACHABLE         __builtin_unreachable()
 #elif ARC_COMPILER_MSVC
     #define ALWAYS_INLINE           __forceinline
     #define ARC_FUNCTION            __FUNCSIG__
     #define ARC_PLATFORM_DEBUGBREAK __debugbreak()
+    #define ARC_NORETURN            __declspec(noreturn)
+    #define ARC_UNREACHABLE         __assume(0)
 #endif
 
 #define ARC_IMPL_STRINGIFY(x)      #x
@@ -162,4 +166,3 @@
 
 #define ARC_STRINGIFY(x)      ARC_IMPL_STRINGIFY(x)
 #define ARC_CONCATENATE(x, y) ARC_IMPL_CONCATENATE(x, y)
-    
