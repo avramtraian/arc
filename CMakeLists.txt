@@ -71,9 +71,6 @@ endif ()
 #==========================================================================================================================================#
 
 set(ARC_SOURCE_FILES
-    ast/ast_node.cpp
-    ast/ast_node.h
-
     bytecode/disassembler.cpp
     bytecode/disassembler.h
     bytecode/instruction.cpp
@@ -117,6 +114,8 @@ set(ARC_SOURCE_FILES
     core/utf8_encoding.cpp
     core/utf8_encoding.h
 
+    frontend/ast.cpp
+    frontend/ast.h
     frontend/source_location.cpp
     frontend/source_location.h
 

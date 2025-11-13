@@ -12,7 +12,7 @@
 #include <core/containers/vector.h>
 #include <frontend/source_location.h>
 
-namespace Arc::AST {
+namespace Arc::Frontend {
 
 enum class ASTNodeType : u32 {
     Unknown = 0,
@@ -60,20 +60,20 @@ private:
 };
 
 template<typename ASTNodeType, typename... Args>
-NODISCARD ALWAYS_INLINE OwnPtr<ASTNodeType> create_node(Args&&... args)
+NODISCARD ALWAYS_INLINE OwnPtr<ASTNodeType> create_ast_node(Args&&... args)
 {
     // TODO: Eventually allocate the nodes from a pool instead of directly from the heap.
     //       This is both a performance and fragmentation concern.
     return create_own<ASTNodeType>(forward<Args>(args)...);
 }
 
-class ExecutionScope final : public ASTNode {
+class ASTExecutionScope final : public ASTNode {
 public:
-    explicit ExecutionScope()
+    explicit ASTExecutionScope()
         : ASTNode(ASTNodeType::ExecutionScope)
     {}
 
-    virtual ~ExecutionScope() override = default;
+    virtual ~ASTExecutionScope() override = default;
     virtual StringView class_name() const override { return "ExecutionScope"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
@@ -81,7 +81,7 @@ public:
 public:
     NODISCARD ALWAYS_INLINE const Vector<OwnPtr<ASTNode>>& children() const { return m_children; }
 
-    ALWAYS_INLINE ExecutionScope& add_child(OwnPtr<ASTNode> child)
+    ALWAYS_INLINE ASTExecutionScope& add_child(OwnPtr<ASTNode> child)
     {
         m_children.push_back(move(child));
         return *this;
@@ -95,7 +95,7 @@ private:
 //----------------------------------------------------------- EXPRESSION NODES -----------------------------------------------------------//
 //========================================================================================================================================//
 
-enum class ExpressionType : u8 {
+enum class ASTExpressionType : u8 {
     Unknown = 0,
     Declaration,
     Unary,
@@ -107,21 +107,21 @@ enum class ExpressionType : u8 {
     Call,
 };
 
-class Expression : public ASTNode {
+class ASTExpression : public ASTNode {
 public:
-    explicit Expression(ExpressionType expression_type)
+    explicit ASTExpression(ASTExpressionType expression_type)
         : ASTNode(ASTNodeType::Expression)
         , m_expression_type(expression_type)
     {}
-    virtual ~Expression() override = default;
+    virtual ~ASTExpression() override = default;
 
 public:
-    NODISCARD ALWAYS_INLINE ExpressionType expression_type() const { return m_expression_type; }
-    NODISCARD ALWAYS_INLINE bool is_unary() const { return m_expression_type == ExpressionType::Unary; }
-    NODISCARD ALWAYS_INLINE bool is_binary() const { return m_expression_type == ExpressionType::Binary; }
+    NODISCARD ALWAYS_INLINE ASTExpressionType expression_type() const { return m_expression_type; }
+    NODISCARD ALWAYS_INLINE bool is_unary() const { return m_expression_type == ASTExpressionType::Unary; }
+    NODISCARD ALWAYS_INLINE bool is_binary() const { return m_expression_type == ASTExpressionType::Binary; }
 
 private:
-    ExpressionType m_expression_type;
+    ASTExpressionType m_expression_type;
 };
 
 enum class DeclarationType : u8 {
@@ -130,14 +130,14 @@ enum class DeclarationType : u8 {
     Class,
 };
 
-class DeclarationExpression : public Expression {
+class ASTDeclarationExpression : public ASTExpression {
 public:
-    explicit DeclarationExpression(DeclarationType declaration_type)
-        : Expression(ExpressionType::Declaration)
+    explicit ASTDeclarationExpression(DeclarationType declaration_type)
+        : ASTExpression(ASTExpressionType::Declaration)
         , m_declaration_type(declaration_type)
     {}
 
-    virtual ~DeclarationExpression() override = default;
+    virtual ~ASTDeclarationExpression() override = default;
 
 public:
     NODISCARD ALWAYS_INLINE DeclarationType declaration_type() const { return m_declaration_type; }
@@ -146,7 +146,7 @@ private:
     DeclarationType m_declaration_type;
 };
 
-enum class UnaryOperation : u8 {
+enum class ASTUnaryOperation : u8 {
 // clang-format off
 #define ARC_ENUMERATE_UNARY_OPERATIONS(x)   \
     x(Unknown)                              \
@@ -165,34 +165,34 @@ enum class UnaryOperation : u8 {
 #undef _ARC_ENUM_MEMBER
 };
 
-StringView unary_operation_to_string_view(UnaryOperation unary_operation);
-String unary_operation_to_string(UnaryOperation unary_operation);
+StringView ast_unary_operation_to_string_view(ASTUnaryOperation unary_operation);
+String ast_unary_operation_to_string(ASTUnaryOperation unary_operation);
 
-class UnaryExpression final : public Expression {
+class ASTUnaryExpression final : public ASTExpression {
 public:
-    UnaryExpression(UnaryOperation unary_operation, OwnPtr<Expression> expression)
-        : Expression(ExpressionType::Unary)
+    ASTUnaryExpression(ASTUnaryOperation unary_operation, OwnPtr<ASTExpression> expression)
+        : ASTExpression(ASTExpressionType::Unary)
         , m_unary_operation(unary_operation)
         , m_expression(move(expression))
     {}
 
-    virtual ~UnaryExpression() override = default;
+    virtual ~ASTUnaryExpression() override = default;
     virtual StringView class_name() const override { return "UnaryExpression"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
 
 public:
-    NODISCARD ALWAYS_INLINE UnaryOperation unary_operation() const { return m_unary_operation; }
+    NODISCARD ALWAYS_INLINE ASTUnaryOperation unary_operation() const { return m_unary_operation; }
 
-    NODISCARD ALWAYS_INLINE Expression& expression() { return *m_expression; }
-    NODISCARD ALWAYS_INLINE const Expression& expression() const { return *m_expression; }
+    NODISCARD ALWAYS_INLINE ASTExpression& expression() { return *m_expression; }
+    NODISCARD ALWAYS_INLINE const ASTExpression& expression() const { return *m_expression; }
 
 private:
-    UnaryOperation m_unary_operation;
-    OwnPtr<Expression> m_expression;
+    ASTUnaryOperation m_unary_operation;
+    OwnPtr<ASTExpression> m_expression;
 };
 
-enum class BinaryOperation : u8 {
+enum class ASTBinaryOperation : u8 {
 // clang-format off
 #define ARC_ENUMERATE_BINARY_OPERATIONS(x)  \
     x(Unknown)                              \
@@ -219,39 +219,39 @@ enum class BinaryOperation : u8 {
 #undef _ARC_ENUM_MEMBER
 };
 
-StringView binary_operation_to_string_view(BinaryOperation binary_operation);
-String binary_operation_to_string(BinaryOperation binary_operation);
+StringView ast_binary_operation_to_string_view(ASTBinaryOperation binary_operation);
+String ast_binary_operation_to_string(ASTBinaryOperation binary_operation);
 
-class BinaryExpression final : public Expression {
+class ASTBinaryExpression final : public ASTExpression {
 public:
-    BinaryExpression(BinaryOperation binary_operation, OwnPtr<Expression> left_expression, OwnPtr<Expression> right_expression)
-        : Expression(ExpressionType::Binary)
+    ASTBinaryExpression(ASTBinaryOperation binary_operation, OwnPtr<ASTExpression> left_expression, OwnPtr<ASTExpression> right_expression)
+        : ASTExpression(ASTExpressionType::Binary)
         , m_binary_operation(binary_operation)
         , m_left_expression(move(left_expression))
         , m_right_expression(move(right_expression))
     {}
 
-    virtual ~BinaryExpression() override = default;
+    virtual ~ASTBinaryExpression() override = default;
     virtual StringView class_name() const override { return "BinaryExpression"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
 
 public:
-    NODISCARD ALWAYS_INLINE BinaryOperation binary_operation() const { return m_binary_operation; }
+    NODISCARD ALWAYS_INLINE ASTBinaryOperation binary_operation() const { return m_binary_operation; }
 
-    NODISCARD ALWAYS_INLINE Expression& left_expression() { return *m_left_expression; }
-    NODISCARD ALWAYS_INLINE const Expression& left_expression() const { return *m_left_expression; }
+    NODISCARD ALWAYS_INLINE ASTExpression& left_expression() { return *m_left_expression; }
+    NODISCARD ALWAYS_INLINE const ASTExpression& left_expression() const { return *m_left_expression; }
 
-    NODISCARD ALWAYS_INLINE Expression& right_expression() { return *m_right_expression; }
-    NODISCARD ALWAYS_INLINE const Expression& right_expression() const { return *m_right_expression; }
+    NODISCARD ALWAYS_INLINE ASTExpression& right_expression() { return *m_right_expression; }
+    NODISCARD ALWAYS_INLINE const ASTExpression& right_expression() const { return *m_right_expression; }
 
 private:
-    BinaryOperation m_binary_operation;
-    OwnPtr<Expression> m_left_expression;
-    OwnPtr<Expression> m_right_expression;
+    ASTBinaryOperation m_binary_operation;
+    OwnPtr<ASTExpression> m_left_expression;
+    OwnPtr<ASTExpression> m_right_expression;
 };
 
-enum class LiteralType : u8 {
+enum class ASTLiteralType : u8 {
 // clang-format off
 #define ARC_ENUMERATE_LITERAL_TYPES(x)                      \
     x(UnsignedInteger,      unsigned_integer,       u64)    \
@@ -267,13 +267,13 @@ enum class LiteralType : u8 {
 #undef _ARC_ENUM_MEMBER
 };
 
-StringView literal_type_to_string_view(LiteralType literal_type);
-String literal_type_to_string(LiteralType literal_type);
+StringView ast_literal_type_to_string_view(ASTLiteralType literal_type);
+String ast_literal_type_to_string(ASTLiteralType literal_type);
 
-class LiteralExpression final : public Expression {
+class ASTLiteralExpression final : public ASTExpression {
 public:
-    explicit LiteralExpression(LiteralType literal_type)
-        : Expression(ExpressionType::Literal)
+    explicit ASTLiteralExpression(ASTLiteralType literal_type)
+        : ASTExpression(ASTExpressionType::Literal)
         , m_literal_type(literal_type)
         , m_literal_unsigned_integer(0)
         , m_literal_signed_integer(0)
@@ -281,33 +281,33 @@ public:
         , m_literal_character('\0')
     {}
 
-    virtual ~LiteralExpression() override = default;
+    virtual ~ASTLiteralExpression() override = default;
     virtual StringView class_name() const override { return "LiteralExpression"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
 
 public:
-    NODISCARD ALWAYS_INLINE LiteralType literal_type() const { return m_literal_type; }
+    NODISCARD ALWAYS_INLINE ASTLiteralType literal_type() const { return m_literal_type; }
 
-#define _ARC_DECLARE_LITERAL_FUNCTIONS(expression_type, snake_case_type, type)                                           \
-    NODISCARD ALWAYS_INLINE bool is_##snake_case_type() const { return m_literal_type == LiteralType::expression_type; } \
-    NODISCARD ALWAYS_INLINE type& snake_case_type()                                                                      \
-    {                                                                                                                    \
-        ARC_ASSERT(is_##snake_case_type());                                                                              \
-        return m_literal_##snake_case_type;                                                                              \
-    }                                                                                                                    \
-    ALWAYS_INLINE LiteralExpression& set_##snake_case_type(type value)                                                   \
-    {                                                                                                                    \
-        ARC_ASSERT(is_##snake_case_type());                                                                              \
-        m_literal_##snake_case_type = move(value);                                                                       \
-        return *this;                                                                                                    \
+#define _ARC_DECLARE_LITERAL_FUNCTIONS(expression_type, snake_case_type, type)                                              \
+    NODISCARD ALWAYS_INLINE bool is_##snake_case_type() const { return m_literal_type == ASTLiteralType::expression_type; } \
+    NODISCARD ALWAYS_INLINE type& snake_case_type()                                                                         \
+    {                                                                                                                       \
+        ARC_ASSERT(is_##snake_case_type());                                                                                 \
+        return m_literal_##snake_case_type;                                                                                 \
+    }                                                                                                                       \
+    ALWAYS_INLINE ASTLiteralExpression& set_##snake_case_type(type value)                                                   \
+    {                                                                                                                       \
+        ARC_ASSERT(is_##snake_case_type());                                                                                 \
+        m_literal_##snake_case_type = move(value);                                                                          \
+        return *this;                                                                                                       \
     }
 
     ARC_ENUMERATE_LITERAL_TYPES(_ARC_DECLARE_LITERAL_FUNCTIONS)
 #undef _ARC_DECLARE_LITERAL_FUNCTIONS
 
 public:
-    LiteralType m_literal_type;
+    ASTLiteralType m_literal_type;
 
     // NOTE: It seems wasteful to not store these primitive types inside a union. However, since the 'String' class dynamically allocates
     //       memory, we can't store it in the union as well - which would create an uncomfortable situation.
@@ -321,14 +321,14 @@ public:
     String m_literal_string;
 };
 
-class IdentifierExpression final : public Expression {
+class ASTIdentifierExpression final : public ASTExpression {
 public:
-    explicit IdentifierExpression(String identifier_name)
-        : Expression(ExpressionType::Identifier)
+    explicit ASTIdentifierExpression(String identifier_name)
+        : ASTExpression(ASTExpressionType::Identifier)
         , m_identifier_name(move(identifier_name))
     {}
 
-    virtual ~IdentifierExpression() override = default;
+    virtual ~ASTIdentifierExpression() override = default;
     virtual StringView class_name() const override { return "IdentifierExpression"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
@@ -340,140 +340,140 @@ private:
     String m_identifier_name;
 };
 
-class AssignmentExpression final : public Expression {
+class ASTAssignmentExpression final : public ASTExpression {
 public:
-    AssignmentExpression(OwnPtr<Expression> left_expression, OwnPtr<Expression> right_expression)
-        : Expression(ExpressionType::Assignment)
+    ASTAssignmentExpression(OwnPtr<ASTExpression> left_expression, OwnPtr<ASTExpression> right_expression)
+        : ASTExpression(ASTExpressionType::Assignment)
         , m_left_expression(move(left_expression))
         , m_right_expression(move(right_expression))
     {}
 
-    virtual ~AssignmentExpression() override = default;
+    virtual ~ASTAssignmentExpression() override = default;
     virtual StringView class_name() const override { return "AssignmentExpression"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
 
 public:
-    NODISCARD ALWAYS_INLINE const OwnPtr<Expression>& left_expression() const { return m_left_expression; }
-    NODISCARD ALWAYS_INLINE const OwnPtr<Expression>& right_expression() const { return m_right_expression; }
+    NODISCARD ALWAYS_INLINE const OwnPtr<ASTExpression>& left_expression() const { return m_left_expression; }
+    NODISCARD ALWAYS_INLINE const OwnPtr<ASTExpression>& right_expression() const { return m_right_expression; }
 
 private:
-    OwnPtr<Expression> m_left_expression;
-    OwnPtr<Expression> m_right_expression;
+    OwnPtr<ASTExpression> m_left_expression;
+    OwnPtr<ASTExpression> m_right_expression;
 };
 
-class MemberExpression final : public Expression {
+class ASTMemberExpression final : public ASTExpression {
 public:
-    MemberExpression(OwnPtr<Expression> instance_expression, String member_identifier_name)
-        : Expression(ExpressionType::Member)
+    ASTMemberExpression(OwnPtr<ASTExpression> instance_expression, String member_identifier_name)
+        : ASTExpression(ASTExpressionType::Member)
         , m_instance_expression(move(instance_expression))
         , m_member_identifier_name(move(member_identifier_name))
     {}
 
-    virtual ~MemberExpression() override = default;
+    virtual ~ASTMemberExpression() override = default;
     virtual StringView class_name() const override { return "MemberExpression"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
 
 public:
-    NODISCARD ALWAYS_INLINE const OwnPtr<Expression>& instance_expression() const { return m_instance_expression; }
+    NODISCARD ALWAYS_INLINE const OwnPtr<ASTExpression>& instance_expression() const { return m_instance_expression; }
     NODISCARD ALWAYS_INLINE const String& member_identifier_name() const { return m_member_identifier_name; }
 
 private:
-    OwnPtr<Expression> m_instance_expression;
+    OwnPtr<ASTExpression> m_instance_expression;
     String m_member_identifier_name;
 };
 
-class CallExpression final : public Expression {
+class ASTCallExpression final : public ASTExpression {
 public:
-    CallExpression(OwnPtr<Expression> callee_expression)
-        : Expression(ExpressionType::Call)
+    ASTCallExpression(OwnPtr<ASTExpression> callee_expression)
+        : ASTExpression(ASTExpressionType::Call)
         , m_callee_expression(move(callee_expression))
     {}
 
-    virtual ~CallExpression() override = default;
+    virtual ~ASTCallExpression() override = default;
     virtual StringView class_name() const override { return "CallExpression"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
 
 public:
-    NODISCARD ALWAYS_INLINE const OwnPtr<Expression>& callee_expression() const { return m_callee_expression; }
-    NODISCARD ALWAYS_INLINE const Vector<OwnPtr<Expression>>& parameters() const { return m_parameters; }
+    NODISCARD ALWAYS_INLINE const OwnPtr<ASTExpression>& callee_expression() const { return m_callee_expression; }
+    NODISCARD ALWAYS_INLINE const Vector<OwnPtr<ASTExpression>>& parameters() const { return m_parameters; }
 
-    ALWAYS_INLINE CallExpression& add_parameter(OwnPtr<Expression> parameter)
+    ALWAYS_INLINE ASTCallExpression& add_parameter(OwnPtr<ASTExpression> parameter)
     {
         m_parameters.push_back(move(parameter));
         return *this;
     }
 
 private:
-    OwnPtr<Expression> m_callee_expression;
-    Vector<OwnPtr<Expression>> m_parameters;
+    OwnPtr<ASTExpression> m_callee_expression;
+    Vector<OwnPtr<ASTExpression>> m_parameters;
 };
 
 //========================================================================================================================================//
 //------------------------------------------------------------ STRUCTURE NODES -----------------------------------------------------------//
 //========================================================================================================================================//
 
-class WhileStructure final : public ASTNode {
+class ASTWhileStructure final : public ASTNode {
 public:
-    WhileStructure(OwnPtr<Expression> condition_expression, OwnPtr<ExecutionScope> body_execution_scope)
+    ASTWhileStructure(OwnPtr<ASTExpression> condition_expression, OwnPtr<ASTExecutionScope> body_execution_scope)
         : ASTNode(ASTNodeType::WhileStructure)
         , m_condition_expression(move(condition_expression))
         , m_body_execution_scope(move(body_execution_scope))
     {}
 
-    virtual ~WhileStructure() override = default;
+    virtual ~ASTWhileStructure() override = default;
     virtual StringView class_name() const override { return "WhileStructure"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
 
 public:
-    NODISCARD ALWAYS_INLINE const OwnPtr<Expression>& condition_expression() const { return m_condition_expression; }
-    NODISCARD ALWAYS_INLINE const OwnPtr<ExecutionScope>& body_execution_scope() const { return m_body_execution_scope; }
+    NODISCARD ALWAYS_INLINE const OwnPtr<ASTExpression>& condition_expression() const { return m_condition_expression; }
+    NODISCARD ALWAYS_INLINE const OwnPtr<ASTExecutionScope>& body_execution_scope() const { return m_body_execution_scope; }
 
 private:
-    OwnPtr<Expression> m_condition_expression;
-    OwnPtr<ExecutionScope> m_body_execution_scope;
+    OwnPtr<ASTExpression> m_condition_expression;
+    OwnPtr<ASTExecutionScope> m_body_execution_scope;
 };
 
 //========================================================================================================================================//
 //------------------------------------------------------------ STATEMENT NODES -----------------------------------------------------------//
 //========================================================================================================================================//
 
-class ReturnStatement final : public ASTNode {
+class ASTReturnStatement final : public ASTNode {
 public:
-    explicit ReturnStatement(OwnPtr<Expression> return_value_expression)
+    explicit ASTReturnStatement(OwnPtr<ASTExpression> return_value_expression)
         : ASTNode(ASTNodeType::ReturnStatement)
         , m_return_value_expression(move(return_value_expression))
     {}
 
-    virtual ~ReturnStatement() override = default;
+    virtual ~ASTReturnStatement() override = default;
     virtual StringView class_name() const override { return "ReturnStatement"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
 
 public:
-    NODISCARD ALWAYS_INLINE const OwnPtr<Expression>& return_value_expression() const { return m_return_value_expression; }
+    NODISCARD ALWAYS_INLINE const OwnPtr<ASTExpression>& return_value_expression() const { return m_return_value_expression; }
     NODISCARD ALWAYS_INLINE bool is_void() const { return !m_return_value_expression.is_valid(); }
 
 private:
-    OwnPtr<Expression> m_return_value_expression;
+    OwnPtr<ASTExpression> m_return_value_expression;
 };
 
 //========================================================================================================================================//
 //----------------------------------------------------------- DECLARATION NODES ----------------------------------------------------------//
 //========================================================================================================================================//
 
-class VariableDeclaration final : public DeclarationExpression {
+class ASTVariableDeclaration final : public ASTDeclarationExpression {
 public:
-    VariableDeclaration(String type_identifier_name, String variable_identifier_name)
-        : DeclarationExpression(DeclarationType::Variable)
+    ASTVariableDeclaration(String type_identifier_name, String variable_identifier_name)
+        : ASTDeclarationExpression(DeclarationType::Variable)
         , m_type_identifier_name(move(type_identifier_name))
         , m_variable_identifier_name(move(variable_identifier_name))
     {}
 
-    virtual ~VariableDeclaration() override = default;
+    virtual ~ASTVariableDeclaration() override = default;
     virtual StringView class_name() const override { return "VariableDeclaration"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
@@ -487,7 +487,7 @@ private:
     String m_variable_identifier_name;
 };
 
-class FunctionDeclaration final : public DeclarationExpression {
+class ASTFunctionDeclaration final : public ASTDeclarationExpression {
 public:
     struct Parameter {
         String type_identifier_name;
@@ -495,16 +495,16 @@ public:
     };
 
 public:
-    FunctionDeclaration(String return_type_identifier_name, String function_identifier_name, Vector<Parameter> parameters,
-                        OwnPtr<ExecutionScope> body_execution_scope)
-        : DeclarationExpression(DeclarationType::Function)
+    ASTFunctionDeclaration(String return_type_identifier_name, String function_identifier_name, Vector<Parameter> parameters,
+                           OwnPtr<ASTExecutionScope> body_execution_scope)
+        : ASTDeclarationExpression(DeclarationType::Function)
         , m_return_type_identifier_name(move(return_type_identifier_name))
         , m_function_identifier_name(move(function_identifier_name))
         , m_parameters(move(parameters))
         , m_body_execution_scope(move(body_execution_scope))
     {}
 
-    virtual ~FunctionDeclaration() override = default;
+    virtual ~ASTFunctionDeclaration() override = default;
     virtual StringView class_name() const override { return "FunctionDeclaration"sv; }
 
     virtual void dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const override;
@@ -513,9 +513,9 @@ public:
     NODISCARD ALWAYS_INLINE const String& return_type_identifier_name() const { return m_return_type_identifier_name; }
     NODISCARD ALWAYS_INLINE const String& function_identifier_name() const { return m_function_identifier_name; }
     NODISCARD ALWAYS_INLINE const Vector<Parameter>& parameters() const { return m_parameters; }
-    NODISCARD ALWAYS_INLINE const OwnPtr<ExecutionScope>& body_execution_scope() const { return m_body_execution_scope; }
+    NODISCARD ALWAYS_INLINE const OwnPtr<ASTExecutionScope>& body_execution_scope() const { return m_body_execution_scope; }
 
-    ALWAYS_INLINE FunctionDeclaration& add_parameter(String type_identifier_name, String variable_identifier_name)
+    ALWAYS_INLINE ASTFunctionDeclaration& add_parameter(String type_identifier_name, String variable_identifier_name)
     {
         Parameter parameter = {};
         parameter.type_identifier_name = move(type_identifier_name);
@@ -528,7 +528,7 @@ private:
     String m_return_type_identifier_name;
     String m_function_identifier_name;
     Vector<Parameter> m_parameters;
-    OwnPtr<ExecutionScope> m_body_execution_scope;
+    OwnPtr<ASTExecutionScope> m_body_execution_scope;
 };
 
-} // namespace Arc::AST
+} // namespace Arc::Frontend
