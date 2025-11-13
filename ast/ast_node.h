@@ -10,6 +10,7 @@
 #include <core/containers/string.h>
 #include <core/containers/string_builder.h>
 #include <core/containers/vector.h>
+#include <frontend/source_location.h>
 
 namespace Arc::AST {
 
@@ -47,8 +48,15 @@ public:
 public:
     NODISCARD ALWAYS_INLINE ASTNodeType node_type() const { return m_node_type; }
 
+    NODISCARD ALWAYS_INLINE Optional<Frontend::SourceRegion> get_optional_source_region() const { return m_source_region; }
+    NODISCARD ALWAYS_INLINE bool has_source_region() const { return m_source_region.has_value(); }
+    NODISCARD ALWAYS_INLINE Frontend::SourceRegion get_source_region() const { return m_source_region.value(); }
+
+    void set_source_region(Frontend::SourceRegion source_region) { m_source_region = source_region; }
+
 private:
     ASTNodeType m_node_type;
+    Optional<Frontend::SourceRegion> m_source_region;
 };
 
 template<typename ASTNodeType, typename... Args>
