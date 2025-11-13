@@ -169,4 +169,9 @@ NODISCARD ALWAYS_INLINE constexpr T&& forward(RemoveReference<T>&& instance) noe
     type_name(type_name&&) noexcept = delete; \
     type_name& operator=(type_name&&) noexcept = delete
 
+#define ARC_MAKE_NAMESPACE_CLASS(type_name) \
+    ARC_MAKE_NONCOPYABLE(type_name);        \
+    ARC_MAKE_NONMOVABLE(type_name);         \
+    type_name() = delete;
+
 }
