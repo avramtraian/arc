@@ -43,7 +43,7 @@ String::String(String&& other) noexcept
     }
 
     other.m_byte_count = 1;
-    zero_memory(other.m_inline_buffer, inline_capacity);
+    zero_memory(other.m_inline_buffer, INLINE_CAPACITY);
 }
 
 String::String(StringView view)
@@ -98,7 +98,7 @@ String& String::operator=(String&& other) noexcept
     }
 
     other.m_byte_count = 1;
-    zero_memory(other.m_inline_buffer, inline_capacity);
+    zero_memory(other.m_inline_buffer, INLINE_CAPACITY);
 
     return *this;
 }
@@ -132,12 +132,12 @@ void String::clear()
     }
 
     m_byte_count = 1;
-    zero_memory(m_inline_buffer, inline_capacity);
+    zero_memory(m_inline_buffer, INLINE_CAPACITY);
 }
 
 String::HeapBuffer* String::allocate_memory(usize in_byte_count)
 {
-    ARC_ASSERT(in_byte_count > inline_capacity);
+    ARC_ASSERT(in_byte_count > INLINE_CAPACITY);
     const usize allocation_size = sizeof(HeapBuffer) + in_byte_count;
     void* memory_block = ::operator new(allocation_size);
     HeapBuffer* heap_buffer = new (memory_block) HeapBuffer();
@@ -147,7 +147,7 @@ String::HeapBuffer* String::allocate_memory(usize in_byte_count)
 
 void String::free_memory(HeapBuffer* heap_buffer, usize in_byte_count)
 {
-    ARC_ASSERT(in_byte_count > inline_capacity);
+    ARC_ASSERT(in_byte_count > INLINE_CAPACITY);
     MAYBE_UNUSED const usize allocation_size = sizeof(HeapBuffer) + in_byte_count;
     ::operator delete(heap_buffer);
 }

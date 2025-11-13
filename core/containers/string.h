@@ -13,8 +13,8 @@ namespace Arc {
 
 class String {
 public:
-    static constexpr usize inline_capacity = sizeof(void*);
-    static_assert(inline_capacity > 0);
+    static constexpr usize INLINE_CAPACITY = sizeof(void*);
+    static_assert(INLINE_CAPACITY > 0);
 
     struct HeapBuffer {
 #if ARC_COMPILER_CLANG
@@ -65,8 +65,8 @@ public:
     String& operator=(StringView view);
 
 public:
-    NODISCARD ALWAYS_INLINE bool is_stored_inline() const { return m_byte_count <= inline_capacity; }
-    NODISCARD ALWAYS_INLINE bool is_stored_on_heap() const { return m_byte_count > inline_capacity; }
+    NODISCARD ALWAYS_INLINE bool is_stored_inline() const { return m_byte_count <= INLINE_CAPACITY; }
+    NODISCARD ALWAYS_INLINE bool is_stored_on_heap() const { return m_byte_count > INLINE_CAPACITY; }
 
     NODISCARD ALWAYS_INLINE bool is_empty() const
     {
@@ -110,7 +110,7 @@ private:
 private:
     usize m_byte_count;
     union {
-        char m_inline_buffer[inline_capacity];
+        char m_inline_buffer[INLINE_CAPACITY];
         HeapBuffer* m_heap_buffer;
     };
 };
