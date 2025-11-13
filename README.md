@@ -4,8 +4,8 @@ This project aims to provide a ***complete language toolchain*** — from langua
 and a virtual-machine runtime (in the spirit of Java) — but with a syntax closer to C.
 However: as of now, this repository implements only the primitive **bytecode instruction set**, a minimal **runtime
 virtual machine**, and a minimal **AST node set**. It does not yet include a *lexer*, *parser*, *full compiler
-front-end*, *language specification*, or any *optimisations*. The work is undertaken as a **personal learning project
-** (to build experience and showcase capability) rather than as a production-ready toolchain.
+front-end*, *language specification*, or any *optimizations*. The work is undertaken as a **personal learning project**
+(to build experience and showcase capability) rather than as a production-ready toolchain.
 
 *In other words*: you are looking at the *early skeleton of a toolchain*. The goal is to evolve it gradually into
 something more complete. Use it, study it, extend it, but keep in mind its current limitations.
