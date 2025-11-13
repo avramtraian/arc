@@ -7,9 +7,9 @@
 #include <runtime/interpreter.h>
 #include <runtime/virtual_machine.h>
 
-namespace arc::bytecode {
+namespace Arc::Bytecode {
 
-using namespace arc::runtime;
+using namespace Arc::Runtime;
 
 void AddInstruction::execute(Interpreter& interpreter) const
 {
@@ -19,12 +19,12 @@ void AddInstruction::execute(Interpreter& interpreter) const
     dst.value = lhs.value + rhs.value;
 }
 
-void CallInstruction::execute(runtime::Interpreter& interpreter) const
+void CallInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     interpreter.call(m_callee_address, m_parameters_byte_count);
 }
 
-void CompareGreaterInstruction::execute(runtime::Interpreter& interpreter) const
+void CompareGreaterInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     auto& dst = interpreter.vm().register_storage(m_dst_register);
     const auto& lhs = interpreter.vm().register_storage(m_lhs_register);
@@ -32,31 +32,31 @@ void CompareGreaterInstruction::execute(runtime::Interpreter& interpreter) const
     dst.value = lhs.value > rhs.value;
 }
 
-void DecrementInstruction::execute(runtime::Interpreter& interpreter) const
+void DecrementInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     auto& dst = interpreter.vm().register_storage(m_dst_register);
     --dst.value;
 }
 
-void IncrementInstruction::execute(runtime::Interpreter& interpreter) const
+void IncrementInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     auto& dst = interpreter.vm().register_storage(m_dst_register);
     ++dst.value;
 }
 
-void JumpInstruction::execute(runtime::Interpreter& interpreter) const
+void JumpInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     interpreter.jump(m_jump_address);
 }
 
-void JumpIfInstruction::execute(runtime::Interpreter& interpreter) const
+void JumpIfInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     const auto& condition = interpreter.vm().register_storage(m_condition_register);
     if (condition.value)
         interpreter.jump(m_jump_address);
 }
 
-void LoadFromStackInstruction::execute(runtime::Interpreter& interpreter) const
+void LoadFromStackInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
     auto& dst_register = vm.register_storage(m_dst_register);
@@ -64,7 +64,7 @@ void LoadFromStackInstruction::execute(runtime::Interpreter& interpreter) const
     dst_register.value = src_register.value;
 }
 
-void Load8FromStackInstruction::execute(runtime::Interpreter& interpreter) const
+void Load8FromStackInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
     auto& dst_register = vm.register_storage(m_dst_register);
@@ -72,7 +72,7 @@ void Load8FromStackInstruction::execute(runtime::Interpreter& interpreter) const
     dst_register.value = static_cast<u64>(src_value);
 }
 
-void Load16FromStackInstruction::execute(runtime::Interpreter& interpreter) const
+void Load16FromStackInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
     auto& dst_register = vm.register_storage(m_dst_register);
@@ -80,7 +80,7 @@ void Load16FromStackInstruction::execute(runtime::Interpreter& interpreter) cons
     dst_register.value = static_cast<u64>(src_value);
 }
 
-void Load32FromStackInstruction::execute(runtime::Interpreter& interpreter) const
+void Load32FromStackInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
     auto& dst_register = vm.register_storage(m_dst_register);
@@ -94,7 +94,7 @@ void LoadImmediate8Instruction::execute(Interpreter& interpreter) const
     dst.value = static_cast<u64>(m_immediate_value);
 }
 
-void PopInstruction::execute(runtime::Interpreter& interpreter) const
+void PopInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     interpreter.vm().stack().pop(m_pop_byte_count);
 }
@@ -105,33 +105,33 @@ void PopRegisterInstruction::execute(Interpreter& interpreter) const
     vm.stack().pop<VirtualMachine::RegisterStorage>();
 }
 
-void PushInstruction::execute(runtime::Interpreter& interpreter) const
+void PushInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     interpreter.vm().stack().push(m_push_byte_count);
 }
 
-void PushImmediate8Instruction::execute(runtime::Interpreter& interpreter) const
+void PushImmediate8Instruction::execute(Runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
     u8& dst = vm.stack().push<u8>();
     dst = m_immediate_value;
 }
 
-void PushImmediate16Instruction::execute(runtime::Interpreter& interpreter) const
+void PushImmediate16Instruction::execute(Runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
     u16& dst = vm.stack().push<u16>();
     dst = m_immediate_value;
 }
 
-void PushImmediate32Instruction::execute(runtime::Interpreter& interpreter) const
+void PushImmediate32Instruction::execute(Runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
     u32& dst = vm.stack().push<u32>();
     dst = m_immediate_value;
 }
 
-void PushImmediate64Instruction::execute(runtime::Interpreter& interpreter) const
+void PushImmediate64Instruction::execute(Runtime::Interpreter& interpreter) const
 {
     VirtualMachine& vm = interpreter.vm();
     u64& dst = vm.stack().push<u64>();
@@ -146,7 +146,7 @@ void PushRegisterInstruction::execute(Interpreter& interpreter) const
     dst_register.value = src_register.value;
 }
 
-void ReturnInstruction::execute(runtime::Interpreter& interpreter) const
+void ReturnInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     interpreter.return_from_call();
 }
@@ -183,7 +183,7 @@ void Store32ToStackInstruction::execute(Interpreter& interpreter) const
     dst = static_cast<u32>(src_register.value);
 }
 
-void SubInstruction::execute(runtime::Interpreter& interpreter) const
+void SubInstruction::execute(Runtime::Interpreter& interpreter) const
 {
     auto& dst = interpreter.vm().register_storage(m_dst_register);
     const auto& lhs = interpreter.vm().register_storage(m_lhs_register);

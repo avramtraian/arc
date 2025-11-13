@@ -9,7 +9,7 @@
 #include <core/containers/own_ptr.h>
 #include <core/containers/vector.h>
 
-namespace arc::bytecode {
+namespace Arc::Bytecode {
 
 class Package {
     ARC_MAKE_NONCOPYABLE(Package);
@@ -29,7 +29,7 @@ public:
     const Instruction& fetch_instruction(usize instruction_pointer) const;
 
 private:
-    Vector<OwnPtr<bytecode::Instruction>> m_instructions;
+    Vector<OwnPtr<Bytecode::Instruction>> m_instructions;
 };
 
 }

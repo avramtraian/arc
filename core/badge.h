@@ -7,7 +7,7 @@
 
 #include <core/types.h>
 
-namespace arc::core {
+namespace Arc::core {
 
 template<typename T>
 class Badge {
@@ -27,6 +27,6 @@ private:
 
 }
 
-namespace arc {
+namespace Arc {
 using core::Badge;
 }

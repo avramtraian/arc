@@ -7,10 +7,9 @@
 
 #include <cstdio>
 
-namespace arc {
+namespace Arc {
 
-void arc_assertion_failed(AssertionKind kind, const char* expression, const char* file, const char* function,
-                          u32 line_number)
+void arc_assertion_failed(AssertionKind kind, const char* expression, const char* file, const char* function, u32 line_number)
 {
     if (kind == AssertionKind::Assert) {
         printf("ASSERTION FAILED: %s\n", expression);

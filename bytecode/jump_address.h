@@ -8,7 +8,7 @@
 #include <core/containers/format.h>
 #include <core/types.h>
 
-namespace arc::bytecode {
+namespace Arc::Bytecode {
 
 class JumpAddress {
 public:
@@ -27,11 +27,11 @@ private:
 
 }
 
-namespace arc {
+namespace Arc {
 template<>
-class Formatter<bytecode::JumpAddress> {
+class Formatter<Bytecode::JumpAddress> {
 public:
-    ALWAYS_INLINE static void format(FormatStream& stream, const bytecode::JumpAddress& address)
+    ALWAYS_INLINE static void format(FormatStream& stream, const Bytecode::JumpAddress& address)
     {
         stream.push_codepoint('@');
         stream.push_unsigned_integer(address.address());

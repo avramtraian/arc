@@ -6,7 +6,7 @@
 #include <core/containers/string.h>
 #include <core/containers/string_view.h>
 
-namespace arc {
+namespace Arc {
 
 StringView StringView::from_utf8(const char* characters, usize byte_count)
 {

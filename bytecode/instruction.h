@@ -10,7 +10,7 @@
 #include <core/containers/string.h>
 #include <runtime/forward.h>
 
-namespace arc::bytecode {
+namespace Arc::Bytecode {
 
 class Instruction {
     ARC_MAKE_NONCOPYABLE(Instruction);
@@ -20,7 +20,7 @@ public:
     Instruction() = default;
     virtual ~Instruction() = default;
 
-    virtual void execute(runtime::Interpreter&) const = 0;
+    virtual void execute(Runtime::Interpreter&) const = 0;
     virtual String to_string() const = 0;
 };
 
@@ -34,7 +34,7 @@ public:
 
     virtual ~AddInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -52,7 +52,7 @@ public:
 
     virtual ~CallInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -70,7 +70,7 @@ public:
 
     virtual ~CompareGreaterInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -87,7 +87,7 @@ public:
 
     virtual ~DecrementInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -102,7 +102,7 @@ public:
 
     virtual ~IncrementInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -117,7 +117,7 @@ public:
 
     virtual ~JumpInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -133,7 +133,7 @@ public:
 
     virtual ~JumpIfInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -150,7 +150,7 @@ public:
 
     virtual ~LoadFromStackInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -167,7 +167,7 @@ public:
 
     virtual ~Load8FromStackInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -184,7 +184,7 @@ public:
 
     virtual ~Load16FromStackInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -201,7 +201,7 @@ public:
 
     virtual ~Load32FromStackInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -218,7 +218,7 @@ public:
 
     virtual ~LoadImmediate8Instruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -234,7 +234,7 @@ public:
 
     virtual ~PopInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -246,7 +246,7 @@ public:
     PopRegisterInstruction() = default;
     virtual ~PopRegisterInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 };
 
@@ -258,7 +258,7 @@ public:
 
     virtual ~PushInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -273,7 +273,7 @@ public:
 
     virtual ~PushImmediate8Instruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -288,7 +288,7 @@ public:
 
     virtual ~PushImmediate16Instruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -303,7 +303,7 @@ public:
 
     virtual ~PushImmediate32Instruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -318,7 +318,7 @@ public:
 
     virtual ~PushImmediate64Instruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -333,7 +333,7 @@ public:
 
     virtual ~PushRegisterInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -345,7 +345,7 @@ public:
     ALWAYS_INLINE ReturnInstruction() {}
     virtual ~ReturnInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 };
 
@@ -358,7 +358,7 @@ public:
 
     virtual ~StoreToStackInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -375,7 +375,7 @@ public:
 
     virtual ~Store8ToStackInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -392,7 +392,7 @@ public:
 
     virtual ~Store16ToStackInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -409,7 +409,7 @@ public:
 
     virtual ~Store32ToStackInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:
@@ -427,7 +427,7 @@ public:
 
     virtual ~SubInstruction() override = default;
 
-    virtual void execute(runtime::Interpreter&) const override;
+    virtual void execute(Runtime::Interpreter&) const override;
     virtual String to_string() const override;
 
 private:

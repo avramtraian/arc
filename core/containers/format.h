@@ -9,7 +9,7 @@
 #include <core/containers/string_view.h>
 #include <core/memory/byte_buffer.h>
 
-namespace arc {
+namespace Arc {
 
 class FormatStream {
     ARC_MAKE_NONCOPYABLE(FormatStream);
@@ -62,10 +62,7 @@ template<typename T>
 requires (is_floating_point<T>)
 class Formatter<T> {
 public:
-    ALWAYS_INLINE static void format(FormatStream& stream, const T& value)
-    {
-        stream.push_floating_point_number(static_cast<f64>(value));
-    }
+    ALWAYS_INLINE static void format(FormatStream& stream, const T& value) { stream.push_floating_point_number(static_cast<f64>(value)); }
 };
 
 template<>

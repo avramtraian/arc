@@ -7,7 +7,7 @@
 
 #include <core/types.h>
 
-namespace arc {
+namespace Arc {
 
 void copy_memory(void* destination_buffer, const void* source_buffer, usize byte_count);
 void set_memory(void* destination_buffer, u8 byte_value, usize byte_count);

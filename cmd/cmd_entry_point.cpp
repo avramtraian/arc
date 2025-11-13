@@ -13,10 +13,10 @@
 #include <core/containers/string_builder.h>
 #include <cstdio>
 
-namespace arc::cmd {
+namespace Arc::Cmd {
 
-using namespace bytecode;
-using namespace runtime;
+using namespace Bytecode;
+using namespace Runtime;
 
 MAYBE_UNUSED static Register compile_fibonacci_linear(Package& package, u64& out_entry_point)
 {
@@ -161,21 +161,18 @@ MAYBE_UNUSED static void generate_fibonacci_ast()
         int result = fib(20);
     */
 
-    auto literal_signed_int_20 = ast::create_node<ast::LiteralExpression>(ast::LiteralType::SignedInteger);
-    literal_signed_int_20->set_signed_integer(20);
-
     // clang-format off
-    Vector<ast::FunctionDeclaration::Parameter> function_parameters;
+    Vector<AST::FunctionDeclaration::Parameter> function_parameters;
     function_parameters.push_back({ "int"sv, "n"sv });
 
-    auto function_body = ast::create_node<ast::ExecutionScope>();
+    auto function_body = AST::create_node<AST::ExecutionScope>();
 
     {
         // int prev_fib = 1;
-        auto literal_signed_int_1 = ast::create_node<ast::LiteralExpression>(ast::LiteralType::SignedInteger);
+        auto literal_signed_int_1 = AST::create_node<AST::LiteralExpression>(AST::LiteralType::SignedInteger);
         literal_signed_int_1->set_signed_integer(1);
-        auto prev_fib_assignment_expression = ast::create_node<ast::AssignmentExpression>(
-            ast::create_node<ast::VariableDeclaration>("int"sv, "prev_fib"sv),
+        auto prev_fib_assignment_expression = AST::create_node<AST::AssignmentExpression>(
+            AST::create_node<AST::VariableDeclaration>("int"sv, "prev_fib"sv),
             move(literal_signed_int_1)
         );
         function_body->add_child(move(prev_fib_assignment_expression));
@@ -183,25 +180,25 @@ MAYBE_UNUSED static void generate_fibonacci_ast()
 
     {
         // int curr_fib = 1;
-        auto literal_signed_int_1 = ast::create_node<ast::LiteralExpression>(ast::LiteralType::SignedInteger);
+        auto literal_signed_int_1 = AST::create_node<AST::LiteralExpression>(AST::LiteralType::SignedInteger);
         literal_signed_int_1->set_signed_integer(1);
-        auto prev_fib_assignment_expression = ast::create_node<ast::AssignmentExpression>(
-            ast::create_node<ast::VariableDeclaration>("int"sv, "curr_fib"sv),
+        auto prev_fib_assignment_expression = AST::create_node<AST::AssignmentExpression>(
+            AST::create_node<AST::VariableDeclaration>("int"sv, "curr_fib"sv),
             move(literal_signed_int_1)
         );
         function_body->add_child(move(prev_fib_assignment_expression));
     }
 
-    auto while_body = ast::create_node<ast::ExecutionScope>();
+    auto while_body = AST::create_node<AST::ExecutionScope>();
 
     {
         // int new_fib = prev_fib + curr_fib;
-        auto assignment_expression = ast::create_node<ast::AssignmentExpression>(
-            ast::create_node<ast::VariableDeclaration>("int"sv, "new_fib"sv),
-            ast::create_node<ast::BinaryExpression>(
-                ast::BinaryOperation::Add,
-                ast::create_node<ast::IdentifierExpression>("prev_fib"sv),
-                ast::create_node<ast::IdentifierExpression>("curr_fib"sv)
+        auto assignment_expression = AST::create_node<AST::AssignmentExpression>(
+            AST::create_node<AST::VariableDeclaration>("int"sv, "new_fib"sv),
+            AST::create_node<AST::BinaryExpression>(
+                AST::BinaryOperation::Add,
+                AST::create_node<AST::IdentifierExpression>("prev_fib"sv),
+                AST::create_node<AST::IdentifierExpression>("curr_fib"sv)
             )
         );
         while_body->add_child(move(assignment_expression));
@@ -209,36 +206,47 @@ MAYBE_UNUSED static void generate_fibonacci_ast()
 
     {
         // prev_fib = curr_fib;
-        auto assignment_expression = ast::create_node<ast::AssignmentExpression>(
-            ast::create_node<ast::IdentifierExpression>("prev_fib"sv),
-            ast::create_node<ast::IdentifierExpression>("curr_fib"sv)
+        auto assignment_expression = AST::create_node<AST::AssignmentExpression>(
+            AST::create_node<AST::IdentifierExpression>("prev_fib"sv),
+            AST::create_node<AST::IdentifierExpression>("curr_fib"sv)
         );
         while_body->add_child(move(assignment_expression));
     }
 
     {
         // curr_fib = new_fib;
-        auto assignment_expression = ast::create_node<ast::AssignmentExpression>(
-            ast::create_node<ast::IdentifierExpression>("curr_fib"sv),
-            ast::create_node<ast::IdentifierExpression>("new_fib"sv)
+        auto assignment_expression = AST::create_node<AST::AssignmentExpression>(
+            AST::create_node<AST::IdentifierExpression>("curr_fib"sv),
+            AST::create_node<AST::IdentifierExpression>("new_fib"sv)
         );
         while_body->add_child(move(assignment_expression));
     }
 
     // k < n
-    auto while_condition_expression = ast::create_node<ast::BinaryExpression>(
-        ast::BinaryOperation::CompareLess,
-        ast::create_node<ast::IdentifierExpression>("k"sv),
-        ast::create_node<ast::IdentifierExpression>("n"sv)
+    auto while_condition_expression = AST::create_node<AST::BinaryExpression>(
+        AST::BinaryOperation::CompareLess,
+        AST::create_node<AST::IdentifierExpression>("k"sv),
+        AST::create_node<AST::IdentifierExpression>("n"sv)
     );
 
-    function_body->add_child(ast::create_node<ast::WhileStructure>(move(while_condition_expression), move(while_body)));
-    function_body->add_child(ast::create_node<ast::ReturnStatement>(ast::create_node<ast::IdentifierExpression>("curr_fib"sv)));
+    function_body->add_child(AST::create_node<AST::WhileStructure>(move(while_condition_expression), move(while_body)));
+    function_body->add_child(AST::create_node<AST::ReturnStatement>(AST::create_node<AST::IdentifierExpression>("curr_fib"sv)));
 
-    auto function_declaration = ast::create_node<ast::FunctionDeclaration>("int"sv, "fib"sv, function_parameters, move(function_body));
+    auto function_declaration = AST::create_node<AST::FunctionDeclaration>("int"sv, "fib"sv, function_parameters, move(function_body));
 
-    auto program = ast::create_node<ast::ExecutionScope>();
+    auto result_call = AST::create_node<AST::CallExpression>(AST::create_node<AST::IdentifierExpression>("fib"sv));
+    auto index_literal = AST::create_node<AST::LiteralExpression>(AST::LiteralType::UnsignedInteger);
+    result_call->add_parameter(move(index_literal));
+
+    auto result_assignment = AST::create_node<AST::AssignmentExpression>(
+        AST::create_node<AST::VariableDeclaration>("int"sv, "result"sv),
+        move(result_call)
+    );
+
+    auto program = AST::create_node<AST::ExecutionScope>();
     program->add_child(move(function_declaration));
+    program->add_child(move(result_assignment));
+
     // clang-format on
 
     StringBuilder builder;
@@ -271,9 +279,9 @@ void entry_point(const CommandLineArguments&)
 
 int main(int argc, char** argv)
 {
-    arc::cmd::CommandLineArguments arguments = {};
+    Arc::Cmd::CommandLineArguments arguments = {};
     arguments.argument_count = argc;
     arguments.arguments = argv;
-    arc::cmd::entry_point(arguments);
+    Arc::Cmd::entry_point(arguments);
     return 0;
 }

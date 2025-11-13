@@ -10,14 +10,14 @@
 #include <core/containers/optional.h>
 #include <runtime/virtual_machine.h>
 
-namespace arc::runtime {
+namespace Arc::Runtime {
 
 class Interpreter {
     ARC_MAKE_NONCOPYABLE(Interpreter);
     ARC_MAKE_NONMOVABLE(Interpreter);
 
 public:
-    Interpreter(VirtualMachine&, const bytecode::Package&);
+    Interpreter(VirtualMachine&, const Bytecode::Package&);
 
     void set_entry_point(u64 entry_point_instruction_offset);
     void execute();
@@ -25,9 +25,9 @@ public:
     NODISCARD ALWAYS_INLINE VirtualMachine& vm() { return m_virtual_machine; }
     NODISCARD ALWAYS_INLINE const VirtualMachine& vm() const { return m_virtual_machine; }
 
-    void jump(bytecode::JumpAddress jump_address);
+    void jump(Bytecode::JumpAddress jump_address);
 
-    void call(bytecode::JumpAddress callee_address, u64 parameters_byte_count);
+    void call(Bytecode::JumpAddress callee_address, u64 parameters_byte_count);
     void return_from_call();
 
 private:
@@ -35,9 +35,9 @@ private:
 
 private:
     VirtualMachine& m_virtual_machine;
-    const bytecode::Package& m_package;
+    const Bytecode::Package& m_package;
     usize m_instruction_pointer;
-    Optional<bytecode::JumpAddress> m_jump_address;
+    Optional<Bytecode::JumpAddress> m_jump_address;
 };
 
 }

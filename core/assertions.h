@@ -7,7 +7,7 @@
 
 #include <core/types.h>
 
-namespace arc {
+namespace Arc {
 
 enum class AssertionKind : u8 {
     Assert,
@@ -22,20 +22,18 @@ void arc_assertion_failed(AssertionKind kind, const char* expression, const char
 
 #define ARC_ASSERT(...)                                                                                            \
     if (!(__VA_ARGS__)) {                                                                                          \
-        ::arc::arc_assertion_failed(::arc::AssertionKind::Assert, #__VA_ARGS__, __FILE__, ARC_FUNCTION, __LINE__); \
+        ::Arc::arc_assertion_failed(::Arc::AssertionKind::Assert, #__VA_ARGS__, __FILE__, ARC_FUNCTION, __LINE__); \
         ARC_PLATFORM_DEBUGBREAK;                                                                                   \
     }
 
 #define ARC_ASSERT_DEBUG(...)                                                                                \
-    if (!(__VA_ARGS__)) {                                                                                    \
-        ::arc::arc_assertion_failed(::arc::AssertionKind::AssertDebug, #__VA_ARGS__, __FILE__, ARC_FUNCTION, \
-                                    __LINE__);                                                               \
+    if (!(__VA_ARGS__)) {                                                                                               \
+        ::Arc::arc_assertion_failed(::Arc::AssertionKind::AssertDebug, #__VA_ARGS__, __FILE__, ARC_FUNCTION, __LINE__);                                                               \
         ARC_PLATFORM_DEBUGBREAK;                                                                             \
     }
 
 #define ARC_ASSERT_NOT_REACHED                                                                               \
     {                                                                                                        \
-        ::arc::arc_assertion_failed(::arc::AssertionKind::AssertNotReached, nullptr, __FILE__, ARC_FUNCTION, \
-                                    __LINE__);                                                               \
+        ::Arc::arc_assertion_failed(::Arc::AssertionKind::AssertNotReached, nullptr, __FILE__, ARC_FUNCTION, __LINE__);                                                               \
         ARC_PLATFORM_DEBUGBREAK;                                                                             \
     }

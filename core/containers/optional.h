@@ -8,7 +8,7 @@
 #include <core/assertions.h>
 #include <core/types.h>
 
-namespace arc {
+namespace Arc {
 
 template<typename T>
 class Optional {

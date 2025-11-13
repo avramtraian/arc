@@ -5,7 +5,7 @@
 
 #pragma once
 
-namespace arc::runtime {
+namespace Arc::Runtime {
 
 class Interpreter;
 class VirtualMachine;

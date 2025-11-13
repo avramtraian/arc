@@ -9,7 +9,7 @@
 #include <core/numeric_limits.h>
 #include <core/types.h>
 
-namespace arc {
+namespace Arc {
 
 class RefCounted {
     ARC_MAKE_NONCOPYABLE(RefCounted);

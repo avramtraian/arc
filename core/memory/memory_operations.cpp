@@ -5,7 +5,7 @@
 
 #include <core/memory/memory_operations.h>
 
-namespace arc {
+namespace Arc {
 
 void copy_memory(void* destination_buffer, const void* source_buffer, usize byte_count)
 {

@@ -6,7 +6,7 @@
 #include <bytecode/instruction.h>
 #include <core/containers/string_builder.h>
 
-namespace arc::bytecode {
+namespace Arc::Bytecode {
 
 String AddInstruction::to_string() const
 {

@@ -8,7 +8,7 @@
 #include <bytecode/forward.h>
 #include <core/containers/string.h>
 
-namespace arc::bytecode {
+namespace Arc::Bytecode {
 
 class Disassembler {
     ARC_MAKE_NONCOPYABLE(Disassembler);

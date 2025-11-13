@@ -6,7 +6,7 @@
 #include <core/containers/format.h>
 #include <core/memory/memory_operations.h>
 
-namespace arc {
+namespace Arc {
 
 void FormatStream::push_codepoint(u32 codepoint)
 {
@@ -90,8 +90,7 @@ void FormatStream::push_floating_point_number(f64 value)
 void FormatStream::push_string(StringView string_view)
 {
     ensure_push_byte_count(string_view.byte_count());
-    copy_memory(m_formatted_buffer.bytes() + m_formatted_byte_count, string_view.characters(),
-                string_view.byte_count());
+    copy_memory(m_formatted_buffer.bytes() + m_formatted_byte_count, string_view.characters(), string_view.byte_count());
     m_formatted_byte_count += string_view.byte_count();
 }
 

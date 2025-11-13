@@ -7,7 +7,7 @@
 
 #include <core/types.h>
 
-namespace arc::cmd {
+namespace Arc::Cmd {
 
 struct CommandLineArguments {
     char** arguments;

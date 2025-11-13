@@ -6,7 +6,7 @@
 #include <ast/ast_node.h>
 #include <core/containers/string_builder.h>
 
-namespace arc::ast {
+namespace Arc::AST {
 
 void ExecutionScope::dump_as_string(StringBuilder& builder, u32 indentation_level, u32 indentation_count) const
 {
@@ -218,4 +218,4 @@ void FunctionDeclaration::dump_as_string(StringBuilder& builder, u32 indentation
     m_body_execution_scope->dump_as_string(builder, indentation_level + indentation_count, indentation_count);
 }
 
-} // namespace arc::ast
+} // namespace Arc::AST

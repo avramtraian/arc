@@ -8,7 +8,7 @@
 #include <core/assertions.h>
 #include <core/types.h>
 
-namespace arc::core {
+namespace Arc::core {
 
 template<typename T, usize C>
 requires (C > 0)
@@ -63,6 +63,6 @@ private:
 
 }
 
-namespace arc {
+namespace Arc {
 using core::Array;
 }

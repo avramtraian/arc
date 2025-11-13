@@ -5,7 +5,7 @@
 
 #include <bytecode/package.h>
 
-namespace arc::bytecode {
+namespace Arc::Bytecode {
 
 Package::Package()
 {}

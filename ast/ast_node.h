@@ -11,7 +11,7 @@
 #include <core/containers/string_builder.h>
 #include <core/containers/vector.h>
 
-namespace arc::ast {
+namespace Arc::AST {
 
 enum class ASTNodeType : u32 {
     Unknown = 0,
@@ -523,4 +523,4 @@ private:
     OwnPtr<ExecutionScope> m_body_execution_scope;
 };
 
-} // namespace arc::ast
+} // namespace Arc::AST

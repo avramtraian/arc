@@ -6,7 +6,7 @@
 #include <core/containers/string.h>
 #include <core/memory/memory_operations.h>
 
-namespace arc {
+namespace Arc {
 
 String::String()
     : m_byte_count(1)

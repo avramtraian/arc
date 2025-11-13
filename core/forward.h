@@ -5,7 +5,7 @@
 
 #pragma once
 
-namespace arc {
+namespace Arc {
 
 class String;
 class StringBuilder;

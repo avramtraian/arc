@@ -7,7 +7,7 @@
 
 #include <core/types.h>
 
-namespace arc {
+namespace Arc {
 
 template<typename T>
 class NumericLimits {
@@ -29,14 +29,8 @@ public:
     template<>                                                                    \
     class NumericLimits<type> {                                                   \
     public:                                                                       \
-        NODISCARD ALWAYS_INLINE static type min()                                 \
-        {                                                                         \
-            return (min_value);                                                   \
-        }                                                                         \
-        NODISCARD ALWAYS_INLINE static type max()                                 \
-        {                                                                         \
-            return (max_value);                                                   \
-        }                                                                         \
+        NODISCARD ALWAYS_INLINE static type min() { return (min_value); }         \
+        NODISCARD ALWAYS_INLINE static type max() { return (max_value); }         \
     }
 
 // clang-format off

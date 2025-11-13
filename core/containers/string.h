@@ -9,7 +9,7 @@
 #include <core/containers/string_view.h>
 #include <core/types.h>
 
-namespace arc {
+namespace Arc {
 
 class String {
 public:
@@ -63,10 +63,7 @@ public:
         return m_byte_count;
     }
 
-    NODISCARD ALWAYS_INLINE const char* characters() const
-    {
-        return is_stored_inline() ? m_inline_buffer : m_heap_buffer->characters;
-    }
+    NODISCARD ALWAYS_INLINE const char* characters() const { return is_stored_inline() ? m_inline_buffer : m_heap_buffer->characters; }
 
     NODISCARD ALWAYS_INLINE ReadonlyBytes bytes() const
     {

@@ -7,7 +7,7 @@
 
 #include <core/types.h>
 
-namespace arc::bytecode {
+namespace Arc::Bytecode {
 
 enum class Register : u8;
 

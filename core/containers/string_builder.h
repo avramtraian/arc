@@ -9,7 +9,7 @@
 #include <core/containers/string.h>
 #include <core/memory/byte_buffer.h>
 
-namespace arc {
+namespace Arc {
 
 class StringBuilder {
     ARC_MAKE_NONCOPYABLE(StringBuilder);

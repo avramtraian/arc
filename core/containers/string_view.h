@@ -8,7 +8,7 @@
 #include <core/containers/span.h>
 #include <core/types.h>
 
-namespace arc {
+namespace Arc {
 
 // Forward declaration.
 class String;

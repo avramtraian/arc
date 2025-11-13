@@ -6,7 +6,7 @@
 #include <core/memory/memory_operations.h>
 #include <runtime/virtual_machine.h>
 
-namespace arc::runtime {
+namespace Arc::Runtime {
 
 VirtualStack::VirtualStack(Badge<VirtualMachine>)
     : m_stack_pointer(0)
@@ -55,7 +55,7 @@ ReadonlyBytes VirtualStack::at_offset(usize offset, usize byte_count) const
 VirtualCallStack::VirtualCallStack()
 {}
 
-void VirtualCallStack::push(bytecode::JumpAddress return_address, u64 parameters_byte_count)
+void VirtualCallStack::push(Bytecode::JumpAddress return_address, u64 parameters_byte_count)
 {
     CallFrame call_frame = {};
     call_frame.return_address = return_address;
@@ -79,14 +79,14 @@ VirtualMachine::VirtualMachine()
     : m_stack({})
 {}
 
-VirtualMachine::RegisterStorage& VirtualMachine::register_storage(bytecode::Register reg)
+VirtualMachine::RegisterStorage& VirtualMachine::register_storage(Bytecode::Register reg)
 {
     const u8 register_index = static_cast<u8>(reg);
     ARC_ASSERT(register_index < m_registers.count());
     return m_registers[register_index];
 }
 
-const VirtualMachine::RegisterStorage& VirtualMachine::register_storage(bytecode::Register reg) const
+const VirtualMachine::RegisterStorage& VirtualMachine::register_storage(Bytecode::Register reg) const
 {
     const u8 register_index = static_cast<u8>(reg);
     ARC_ASSERT(register_index < m_registers.count());

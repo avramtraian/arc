@@ -13,7 +13,7 @@
 #include <core/containers/vector.h>
 #include <runtime/forward.h>
 
-namespace arc::runtime {
+namespace Arc::Runtime {
 
 class VirtualStack {
     ARC_MAKE_NONCOPYABLE(VirtualStack);
@@ -70,14 +70,14 @@ class VirtualCallStack {
 
 public:
     struct CallFrame {
-        bytecode::JumpAddress return_address { 0 };
+        Bytecode::JumpAddress return_address { 0 };
         u64 parameters_byte_count { 0 };
     };
 
 public:
     VirtualCallStack();
 
-    void push(bytecode::JumpAddress return_address, u64 parameters_byte_count);
+    void push(Bytecode::JumpAddress return_address, u64 parameters_byte_count);
     NODISCARD CallFrame pop();
 
 private:
@@ -96,8 +96,8 @@ public:
 public:
     VirtualMachine();
 
-    NODISCARD RegisterStorage& register_storage(bytecode::Register);
-    NODISCARD const RegisterStorage& register_storage(bytecode::Register) const;
+    NODISCARD RegisterStorage& register_storage(Bytecode::Register);
+    NODISCARD const RegisterStorage& register_storage(Bytecode::Register) const;
 
     NODISCARD ALWAYS_INLINE VirtualStack& stack() { return m_stack; }
     NODISCARD ALWAYS_INLINE const VirtualStack& stack() const { return m_stack; }
@@ -106,18 +106,18 @@ public:
     NODISCARD ALWAYS_INLINE const VirtualCallStack& call_stack() const { return m_call_stack; }
 
 private:
-    Array<RegisterStorage, static_cast<u8>(bytecode::Register::Count)> m_registers;
+    Array<RegisterStorage, static_cast<u8>(Bytecode::Register::Count)> m_registers;
     VirtualStack m_stack;
     VirtualCallStack m_call_stack;
 };
 
 }
 
-namespace arc {
+namespace Arc {
 template<>
-class Formatter<runtime::VirtualMachine::RegisterStorage> {
+class Formatter<Runtime::VirtualMachine::RegisterStorage> {
 public:
-    ALWAYS_INLINE static void format(FormatStream& stream, const runtime::VirtualMachine::RegisterStorage& value)
+    ALWAYS_INLINE static void format(FormatStream& stream, const Runtime::VirtualMachine::RegisterStorage& value)
     {
         // NOTE: Currently, registers can only hold 64-bit unsigned integer values. However, this behaviour
         // will most likely change in the future, as the bytecode virtual machine will implement more instructions.

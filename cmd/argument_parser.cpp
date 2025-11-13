@@ -5,4 +5,4 @@
 
 #include <cmd/argument_parser.h>
 
-namespace arc::cmd {}
+namespace Arc::Cmd {}

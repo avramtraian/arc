@@ -7,7 +7,7 @@
 #include <bytecode/package.h>
 #include <core/containers/string_builder.h>
 
-namespace arc::bytecode {
+namespace Arc::Bytecode {
 
 Disassembler::Disassembler(const Package& package)
     : m_package(package)

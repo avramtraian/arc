@@ -14,7 +14,7 @@
 #include <new>
 #include <type_traits>
 
-namespace arc {
+namespace Arc {
 
 using u8 = unsigned char;
 using u16 = unsigned short;

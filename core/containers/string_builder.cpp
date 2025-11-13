@@ -9,7 +9,7 @@
 #define ARC_FORMAT_SPECIFIER_TOKEN_BEGIN '{'
 #define ARC_FORMAT_SPECIFIER_TOKEN_END   '}'
 
-namespace arc {
+namespace Arc {
 
 StringBuilder::StringBuilder()
     : m_byte_count(0)

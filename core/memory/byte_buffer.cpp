@@ -6,7 +6,7 @@
 #include <core/memory/byte_buffer.h>
 #include <core/memory/memory_operations.h>
 
-namespace arc {
+namespace Arc {
 
 ByteBuffer ByteBuffer::allocate(usize in_byte_count)
 {

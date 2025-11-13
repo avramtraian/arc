@@ -8,7 +8,7 @@
 #include <core/containers/span.h>
 #include <core/types.h>
 
-namespace arc {
+namespace Arc {
 
 class ByteBuffer {
     ARC_MAKE_NONCOPYABLE(ByteBuffer);
@@ -34,17 +34,11 @@ public:
     NODISCARD ALWAYS_INLINE ReadWriteByteSpan byte_span() { return ReadWriteByteSpan(m_bytes, m_byte_count); }
     NODISCARD ALWAYS_INLINE ReadonlyByteSpan byte_span() const { return ReadonlyByteSpan(m_bytes, m_byte_count); }
 
-    NODISCARD ALWAYS_INLINE ReadWriteByteSpan read_write_byte_span()
-    {
-        return ReadWriteByteSpan(m_bytes, m_byte_count);
-    }
+    NODISCARD ALWAYS_INLINE ReadWriteByteSpan read_write_byte_span() { return ReadWriteByteSpan(m_bytes, m_byte_count); }
 
     NODISCARD ALWAYS_INLINE WriteonlyByteSpan writeonly_byte_span() { return WriteonlyByteSpan(m_bytes, m_byte_count); }
 
-    NODISCARD ALWAYS_INLINE ReadonlyByteSpan readonly_byte_span() const
-    {
-        return ReadonlyByteSpan(m_bytes, m_byte_count);
-    }
+    NODISCARD ALWAYS_INLINE ReadonlyByteSpan readonly_byte_span() const { return ReadonlyByteSpan(m_bytes, m_byte_count); }
 
 public:
     void free();
