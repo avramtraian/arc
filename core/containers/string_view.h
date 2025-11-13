@@ -42,7 +42,10 @@ public:
 
 public:
     NODISCARD ALWAYS_INLINE const char* characters() const { return m_characters; }
+
+    NODISCARD ALWAYS_INLINE ReadonlyBytes bytes() const { return reinterpret_cast<ReadonlyBytes>(m_characters); }
     NODISCARD ALWAYS_INLINE usize byte_count() const { return m_byte_count; }
+    NODISCARD ALWAYS_INLINE ReadonlyByteSpan byte_span() const { return ReadonlyByteSpan(bytes(), byte_count()); }
 
     NODISCARD ALWAYS_INLINE bool is_empty() const { return m_byte_count == 0; }
     NODISCARD ALWAYS_INLINE bool has_characters() const { return m_byte_count > 0; }
@@ -70,7 +73,7 @@ private:
     // warning: literal operator suffixes not preceded by '_' are reserved for future standardization.
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wliteral-suffix"
-#endif // ARC_COMPILER_CLANG
+#endif // ARC_COMPILER_GCC
 
 #if ARC_COMPILER_MSVC
     // Temporarily disables the following compiler warning:
