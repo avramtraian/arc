@@ -267,7 +267,7 @@ private:
 
 class PushImmediate8Instruction : public Instruction {
 public:
-    ALWAYS_INLINE explicit PushImmediate8Instruction(u64 immediate_value)
+    ALWAYS_INLINE explicit PushImmediate8Instruction(u8 immediate_value)
         : m_immediate_value(immediate_value)
     {}
 
@@ -282,7 +282,7 @@ private:
 
 class PushImmediate16Instruction : public Instruction {
 public:
-    ALWAYS_INLINE explicit PushImmediate16Instruction(u64 immediate_value)
+    ALWAYS_INLINE explicit PushImmediate16Instruction(u16 immediate_value)
         : m_immediate_value(immediate_value)
     {}
 
@@ -297,7 +297,7 @@ private:
 
 class PushImmediate32Instruction : public Instruction {
 public:
-    ALWAYS_INLINE explicit PushImmediate32Instruction(u64 immediate_value)
+    ALWAYS_INLINE explicit PushImmediate32Instruction(u32 immediate_value)
         : m_immediate_value(immediate_value)
     {}
 
