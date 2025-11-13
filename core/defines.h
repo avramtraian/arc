@@ -139,6 +139,27 @@
 #endif // There are multiple platform architecture macros set to 1.
 
 //========================================================================================================================================//
+//--------------------------------------------------------- CONFIGURATION MACROS ---------------------------------------------------------//
+//========================================================================================================================================//
+
+#ifndef ARC_CONFIGURATION_DEBUG
+    #define ARC_CONFIGURATION_DEBUG 0
+#endif // ARC_CONFIGURATION_DEBUG
+
+#ifndef ARC_CONFIGURATION_RELEASE
+    #define ARC_CONFIGURATION_RELEASE 0
+#endif // ARC_CONFIGURATION_RELEASE
+
+#if !ARC_CONFIGURATION_DEBUG && !ARC_CONFIGURATION_RELEASE
+    #error Unknown or unsupported build configuration!
+#endif // Any supported configuration.
+
+#define ARC_CONFIGURATION_COUNT (ARC_CONFIGURATION_DEBUG + ARC_CONFIGURATION_RELEASE)
+#if (ARC_CONFIGURATION_COUNT > 1)
+    #error Multiple build configurations were detected!
+#endif // There are multiple build configuration macros set to 1.
+
+//========================================================================================================================================//
 //------------------------------------------------------------ UTILITY MACROS ------------------------------------------------------------//
 //========================================================================================================================================//
 
